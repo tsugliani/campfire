@@ -1,0 +1,77 @@
+{{ define "main" }}
+{{ if .Params.week }}
+  {{/* Week page */}}
+  <section class="week-page">
+    <h1>{{ .Params.year }} / Week {{ printf "%02d" .Params.week }}</h1>
+    {{- $monday := .Date -}}
+    {{- $sunday := $monday.AddDate 0 0 6 -}}
+    <p class="week-date">{{ $monday.Format "January 2" }} – {{ $sunday.Format "January 2, 2006" }}</p>
+
+    <nav class="week-nav">
+      {{- $currentYear := .Params.year -}}
+      {{- $currentWeek := .Params.week -}}
+      {{- $allWeeks := sort (partial "all-weeks.html" .) "Date" "asc" -}}
+      {{- $prev := false -}}
+      {{- $next := false -}}
+      {{- $found := false -}}
+      {{- range $allWeeks -}}
+        {{- if $found -}}
+          {{- if not $next -}}
+            {{- $next = . -}}
+          {{- end -}}
+        {{- else if and (eq .Params.year $currentYear) (eq .Params.week $currentWeek) -}}
+          {{- $found = true -}}
+        {{- else -}}
+          {{- $prev = . -}}
+        {{- end -}}
+      {{- end -}}
+      {{ with $prev }}<a href="{{ .RelPermalink }}" class="nav-link">&larr; Week {{ printf "%02d" .Params.week }}</a>{{ end }}
+      {{ with $next }}<a href="{{ .RelPermalink }}" class="nav-link">Week {{ printf "%02d" .Params.week }} &rarr;</a>{{ end }}
+    </nav>
+
+    <div class="week-links">
+      {{- range .Pages -}}
+        {{- if .Params.url_link -}}
+          {{- partial "link-card.html" . -}}
+        {{- end -}}
+      {{- end -}}
+    </div>
+  </section>
+
+{{ else if .Params.year }}
+  {{/* Year page */}}
+  <section class="year-page">
+    <h1>{{ .Params.year }}</h1>
+    {{- $weeks := slice -}}
+    {{- range .Pages -}}
+      {{- if .Params.week -}}
+        {{- $weeks = $weeks | append . -}}
+      {{- end -}}
+    {{- end -}}
+    {{- $weeks = sort $weeks "Date" "desc" -}}
+    <div class="year-weeks">
+      {{ range $weeks }}
+      <div class="year-week-card">
+        <h2><a href="{{ .RelPermalink }}">Week {{ printf "%02d" .Params.week }}</a></h2>
+        {{- $monday := .Date -}}
+        {{- $sunday := $monday.AddDate 0 0 6 -}}
+        <span class="week-date">{{ $monday.Format "January 2" }} – {{ $sunday.Format "January 2, 2006" }}</span>
+        <span class="week-link-count">{{ len .Pages }} links</span>
+      </div>
+      {{ end }}
+    </div>
+  </section>
+
+{{ else }}
+  {{/* Generic list */}}
+  <section>
+    <h1>{{ .Title }}</h1>
+    {{ .Content }}
+    {{ range .Pages }}
+    <div>
+      <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+    </div>
+    {{ end }}
+  </section>
+{{ end }}
+{{ end }}

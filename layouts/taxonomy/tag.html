@@ -1,0 +1,11 @@
+{{ define "main" }}
+<section class="tag-page">
+  <h1>Tag: {{ .Title }}</h1>
+  <p class="tag-count">{{ len .Pages }} link{{ if ne (len .Pages) 1 }}s{{ end }}</p>
+  <div class="tag-links">
+    {{ range .Pages.ByDate.Reverse }}
+      {{ partial "link-card.html" . }}
+    {{ end }}
+  </div>
+</section>
+{{ end }}

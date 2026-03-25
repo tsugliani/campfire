@@ -1,0 +1,24 @@
+{{ define "main" }}
+<section class="homepage">
+
+  {{- $weeks := sort (partial "all-weeks.html" .) "Date" "desc" -}}
+
+  {{ with index $weeks 0 }}
+  <section class="week-section">
+    {{- $monday := .Date -}}
+    {{- $sunday := $monday.AddDate 0 0 6 -}}
+    <h2 class="week-heading">
+      <a href="{{ .RelPermalink }}">{{ .Params.year }} / Week {{ printf "%02d" .Params.week }}</a>
+    </h2>
+    <p class="week-date">{{ $monday.Format "January 2" }} – {{ $sunday.Format "January 2, 2006" }}</p>
+    <div class="week-links">
+      {{- range .Pages -}}
+        {{- if .Params.url_link -}}
+          {{- partial "link-card.html" . -}}
+        {{- end -}}
+      {{- end -}}
+    </div>
+  </section>
+  {{ end }}
+</section>
+{{ end }}

@@ -1,0 +1,9 @@
+{{- $weeks := slice -}}
+{{- range .Site.Sections -}}
+  {{- range .Sections -}}
+    {{- if .Params.week -}}
+      {{- $weeks = $weeks | append . -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- return $weeks -}}

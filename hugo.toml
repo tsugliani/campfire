@@ -1,0 +1,16 @@
+baseURL = "https://campfire.tsugliani.fr/"
+languageCode = "en-us"
+title = "Campfire"
+
+[taxonomies]
+  tag = "tags"
+
+[params]
+  description = "Weekly curated links, shared around the tech campfire"
+  enableAddComment = false
+
+[outputs]
+  home = ["HTML", "JSON", "RSS"]
+
+[markup.goldmark.renderer]
+  unsafe = true

@@ -1,0 +1,3 @@
+{{- $accents := slice "#b4befe" "#cba6f7" "#94e2d5" "#fab387" "#a6e3a1" "#f5c2e7" "#f9e2af" "#89dceb" "#f38ba8" "#f2cdcd" -}}
+{{- $color := index $accents (mod (len .) (len $accents)) -}}
+{{- return $color -}}

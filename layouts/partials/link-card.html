@@ -1,0 +1,35 @@
+{{- $domain := urls.Parse .Params.url_link -}}
+{{- $screenshot := printf "/screenshots/%s.png" .File.ContentBaseName -}}
+{{- $screenshotFile := printf "static/screenshots/%s.png" .File.ContentBaseName -}}
+{{- $hasScreenshot := fileExists $screenshotFile -}}
+<article class="link-card {{ if $hasScreenshot }}has-screenshot{{ end }}" data-href="{{ .RelPermalink }}">
+  {{ if $hasScreenshot }}
+  <div class="link-card-screenshot">
+    <img src="{{ $screenshot }}" alt="Screenshot of {{ .Title }}" loading="lazy">
+  </div>
+  {{ end }}
+  <div class="link-card-body">
+    <div class="link-card-header">
+      <div class="link-card-header-left">
+        <h3 class="link-card-title">
+          <a href="{{ .Params.url_link }}" target="_blank" rel="noopener" class="link-card-external">{{ .Title }}</a>
+        </h3>
+        <span class="link-card-domain">{{ $domain.Host }}</span>
+      </div>
+      {{ with $.Params.comments }}<a href="{{ $.RelPermalink }}#comments" class="link-card-comments-badge" title="{{ len . }} comment{{ if gt (len .) 1 }}s{{ end }}">💬 {{ len . }}</a>{{ end }}
+    </div>
+    {{ with .Params.description }}
+    {{- $paragraphs := split . "\n\n" -}}
+    {{- $preview := index $paragraphs 0 -}}
+    <p class="link-card-description">{{ $preview | replaceRE "(^|[\\s>])(https?://[^\\s<>\"']+)" "$1<a href=\"$2\" target=\"_blank\" rel=\"noopener\">$2</a>" | replaceRE "\n" "<br>" | safeHTML }}</p>
+    {{ end }}
+    <div class="link-card-meta">
+      <div class="link-card-tags">
+        {{- range .Params.tags }}
+          <a href="/tags/{{ . | urlize }}/" class="tag-badge-inline" style="--tag-color: {{ partial "tag-color.html" . }}">{{ . }}</a>
+        {{ end -}}
+      </div>
+      <span class="link-card-date">{{ .Date.Format "Jan 2, 2006" }}</span>
+    </div>
+  </div>
+</article>

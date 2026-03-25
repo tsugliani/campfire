@@ -1,0 +1,45 @@
+{{ define "main" }}
+<section class="all-weeks-page">
+  <h1>All Weeks</h1>
+
+  {{- $weeks := sort (partial "all-weeks.html" .) "Date" "desc" -}}
+
+  <div class="year-weeks">
+    {{ range $weeks }}
+    {{- $tagCounts := dict -}}
+    {{- range .Pages -}}
+      {{- range .Params.tags -}}
+        {{- $count := index $tagCounts . | default 0 -}}
+        {{- $tagCounts = merge $tagCounts (dict . (add $count 1)) -}}
+      {{- end -}}
+    {{- end -}}
+    <div class="year-week-card" data-href="{{ .RelPermalink }}">
+      <a href="{{ .RelPermalink }}" class="year-week-card-top">
+        <h2>{{ .Params.year }} / Week {{ printf "%02d" .Params.week }}</h2>
+        {{- $monday := .Date -}}
+        {{- $sunday := $monday.AddDate 0 0 6 -}}
+        <span class="week-date">{{ $monday.Format "January 2" }} – {{ $sunday.Format "January 2, 2006" }}</span>
+        <span class="week-link-count">{{ len .Pages }} links</span>
+      </a>
+      {{- if .Pages -}}
+      <ul class="year-week-card-links">
+        {{- range .Pages -}}
+        {{- if .Params.url_link -}}
+        <li><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>
+        {{- end -}}
+        {{- end -}}
+      </ul>
+      {{- end -}}
+      {{- if $tagCounts -}}
+      <div class="year-week-card-tags">
+        {{- range $tag, $count := $tagCounts -}}
+        {{- $color := partial "tag-color.html" $tag -}}
+        <a href="/tags/{{ $tag | urlize }}/" class="tag-badge-inline" style="--tag-color: {{ $color }}">{{ $tag }} <span class="tag-inline-count">{{ $count }}</span></a>
+        {{- end -}}
+      </div>
+      {{- end -}}
+    </div>
+    {{ end }}
+  </div>
+</section>
+{{ end }}

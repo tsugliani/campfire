@@ -1,0 +1,14 @@
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="/" class="site-logo">
+      <img src="/favicon.svg" alt="" class="site-logo-icon">
+      <span class="site-title">{{ .Site.Title }}</span>
+    </a>
+    <nav class="site-nav">
+      <a href="/weeks/">Archive</a>
+      <a href="/tags/">Tags</a>
+      <a href="/about/">About</a>
+    </nav>
+    {{- partial "search.html" . -}}
+  </div>
+</header>

@@ -1,0 +1,8 @@
+{{- $links := slice -}}
+{{- range .Site.RegularPages -}}
+  {{- if .Params.url_link -}}
+    {{- $entry := dict "title" .Title "url_link" .Params.url_link "description" .Params.description "tags" .Params.tags "year" .Params.year "week" .Params.week "date" (.Date.Format "2006-01-02") "permalink" .RelPermalink -}}
+    {{- $links = $links | append $entry -}}
+  {{- end -}}
+{{- end -}}
+{{- $links | jsonify -}}

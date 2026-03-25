@@ -1,0 +1,15 @@
+{{ define "main" }}
+<section class="tags-index">
+  <h1>Tags</h1>
+  <div class="tags-cloud">
+    {{- $accents := slice "#b4befe" "#cba6f7" "#94e2d5" "#fab387" "#a6e3a1" "#f5c2e7" "#f9e2af" "#89dceb" "#f38ba8" "#f2cdcd" -}}
+    {{ range .Data.Terms.ByCount }}
+    {{- $color := index $accents (mod (len .Page.Title) (len $accents)) -}}
+    <a href="{{ .Page.RelPermalink }}" class="tag-cloud-pill" style="--tag-color: {{ $color }}">
+      <span class="tag-cloud-name">{{ .Page.Title }}</span>
+      <span class="tag-cloud-count">{{ .Count }}</span>
+    </a>
+    {{ end }}
+  </div>
+</section>
+{{ end }}

@@ -1,0 +1,91 @@
+{{ define "main" }}
+<article class="single-link">
+  <header>
+    <h1>{{ .Title }}</h1>
+    {{ with .Params.url_link }}
+    <a href="{{ . }}" target="_blank" rel="noopener" class="external-link">Visit link &rarr;</a>
+    {{ end }}
+  </header>
+
+  {{- $screenshotFile := printf "static/screenshots/%s.png" .File.ContentBaseName -}}
+  {{- $generatedMarker := printf "static/screenshots/%s.generated" .File.ContentBaseName -}}
+  {{ if fileExists $screenshotFile }}{{ if not (fileExists $generatedMarker) }}
+  <a href="{{ .Params.url_link }}" target="_blank" rel="noopener" class="single-screenshot">
+    <img src="/screenshots/{{ .File.ContentBaseName }}.png" alt="Screenshot of {{ .Title }}" loading="lazy">
+  </a>
+  {{ end }}{{ end }}
+
+  {{ with .Params.description }}
+  <div class="link-description">{{ . | replaceRE "(^|[\\s>])(https?://[^\\s<>\"']+)" "$1<a href=\"$2\" target=\"_blank\" rel=\"noopener\">$2</a>" | replaceRE "\n" "<br>" | safeHTML }}</div>
+  {{ end }}
+
+  <div class="link-meta">
+    <span class="link-date">{{ .Date.Format "January 2, 2006" }}</span>
+    {{ with .Params.tags }}
+    <div class="link-tags">
+      {{ range . }}
+        {{ partial "tag-badge.html" . }}
+      {{ end }}
+    </div>
+    {{ end }}
+  </div>
+
+  <div id="comments" class="link-permalink">
+    <strong>Permalink:</strong>
+    <code class="permalink-text" id="permalink-value">{{ .Params.year }}/w{{ printf "%02d" .Params.week }}/{{ .File.ContentBaseName }}</code>
+    <button class="copy-btn" onclick="var t=document.getElementById('permalink-value').textContent,b=this;if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){b.textContent='Copied!';setTimeout(function(){b.textContent='Copy'},1500)}).catch(function(){fallbackCopy(t,b)})}else{fallbackCopy(t,b)}" title="Copy to clipboard">Copy</button>
+    <script>function fallbackCopy(t,b){var a=document.createElement('textarea');a.value=t;a.style.position='fixed';a.style.opacity='0';document.body.appendChild(a);a.select();document.execCommand('copy');document.body.removeChild(a);b.textContent='Copied!';setTimeout(function(){b.textContent='Copy'},1500)}</script>
+  </div>
+
+  {{ with .Params.comments }}
+  <section class="comments-section">
+    <h2>Comments</h2>
+    {{ range . }}
+    <blockquote class="comment">
+      <div class="comment-header">
+        {{ if .email }}
+          <img src="https://www.gravatar.com/avatar/{{ md5 .email }}?s=48&d=identicon" alt="{{ .author }}" class="comment-avatar" loading="lazy">
+        {{ else }}
+          {{ $username := strings.TrimPrefix "@" .author }}
+          <img src="https://github.com/{{ $username }}.png" alt="{{ .author }}" class="comment-avatar" loading="lazy">
+        {{ end }}
+        <strong class="comment-author">{{ .author }}</strong>
+        <time class="comment-date">{{ .date }}</time>
+      </div>
+      <p class="comment-text">{{ .text }}</p>
+    </blockquote>
+    {{ end }}
+  </section>
+  {{ end }}
+
+  {{ .Content }}
+
+  {{ if .Site.Params.enableAddComment }}
+  <section class="add-comment-section">
+    <h2>Leave a comment</h2>
+    <p>Comments are stored in this link's markdown file. To add yours:</p>
+    <ol>
+      <li>Fork the repo (if you haven't already)</li>
+      <li>Edit the link file and add your comment to the <code>comments</code> frontmatter</li>
+      <li>Open a PR back to the main repo</li>
+    </ol>
+    <a href="https://github.com/tsugliani/campfire/edit/main/content/{{ .File.Path }}"
+       target="_blank" rel="noopener"
+       class="add-comment-btn">
+      Edit on GitHub &rarr;
+    </a>
+    <details class="comment-format-help">
+      <summary>Comment format</summary>
+      <pre><code>comments:
+  - author: "@yourgithub"
+    date: {{ now.Format "2006-01-02" }}
+    text: "Your comment here"</code></pre>
+    </details>
+  </section>
+  {{ end }}
+
+  <nav class="single-nav">
+    <a href="{{ .Parent.RelPermalink }}">&larr; Back to Week {{ printf "%02d" .Params.week }}</a>
+  </nav>
+</article>
+{{ end }}

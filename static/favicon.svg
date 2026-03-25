@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Logs -->
+  <rect x="12" y="50" width="40" height="5" rx="2.5" fill="#7f849c" transform="rotate(-3 32 52)"/>
+  <rect x="12" y="50" width="40" height="5" rx="2.5" fill="#6c7086" transform="rotate(3 32 52)"/>
+
+  <!-- Outer flame glow -->
+  <ellipse cx="32" cy="38" rx="14" ry="8" fill="#f38ba8" opacity="0.3">
+    <animate attributeName="opacity" values="0.2;0.4;0.2" dur="1.5s" repeatCount="indefinite"/>
+    <animate attributeName="rx" values="13;15;13" dur="1.5s" repeatCount="indefinite"/>
+  </ellipse>
+
+  <!-- Main flame -->
+  <path fill="#f38ba8">
+    <animate attributeName="d" dur="0.8s" repeatCount="indefinite"
+      values="M32 8 C32 8,18 28,18 38 C18 46,24 50,32 50 C40 50,46 46,46 38 C46 28,32 8,32 8Z;
+              M32 6 C32 6,16 26,17 37 C18 46,24 50,32 50 C40 50,46 46,47 37 C48 26,32 6,32 6Z;
+              M32 8 C32 8,18 28,18 38 C18 46,24 50,32 50 C40 50,46 46,46 38 C46 28,32 8,32 8Z"/>
+  </path>
+
+  <!-- Middle flame -->
+  <path fill="#fab387">
+    <animate attributeName="d" dur="0.7s" repeatCount="indefinite"
+      values="M32 16 C32 16,22 30,22 38 C22 44,26 48,32 48 C38 48,42 44,42 38 C42 30,32 16,32 16Z;
+              M32 14 C32 14,21 29,23 37 C23 44,26 48,32 48 C38 48,42 44,41 37 C43 29,32 14,32 14Z;
+              M32 16 C32 16,22 30,22 38 C22 44,26 48,32 48 C38 48,42 44,42 38 C42 30,32 16,32 16Z"/>
+  </path>
+
+  <!-- Inner flame -->
+  <path fill="#f9e2af">
+    <animate attributeName="d" dur="0.6s" repeatCount="indefinite"
+      values="M32 24 C32 24,26 33,26 38 C26 42,28 46,32 46 C36 46,38 42,38 38 C38 33,32 24,32 24Z;
+              M32 22 C32 22,25 32,27 37 C27 42,28 46,32 46 C36 46,38 42,37 37 C39 32,32 22,32 22Z;
+              M32 24 C32 24,26 33,26 38 C26 42,28 46,32 46 C36 46,38 42,38 38 C38 33,32 24,32 24Z"/>
+  </path>
+
+  <!-- Core -->
+  <path fill="#cdd6f4">
+    <animate attributeName="d" dur="0.5s" repeatCount="indefinite"
+      values="M32 32 C32 32,29 36,29 39 C29 42,30 44,32 44 C34 44,35 42,35 39 C35 36,32 32,32 32Z;
+              M32 30 C32 30,28 35,29 39 C29 42,30 44,32 44 C34 44,35 42,35 39 C36 35,32 30,32 30Z;
+              M32 32 C32 32,29 36,29 39 C29 42,30 44,32 44 C34 44,35 42,35 39 C35 36,32 32,32 32Z"/>
+  </path>
+
+  <!-- Sparks floating up -->
+  <circle cx="22" cy="18" r="1.5" fill="#f9e2af" opacity="0">
+    <animate attributeName="cy" values="20;4" dur="2s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.8;0" dur="2s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="40" cy="14" r="1" fill="#fab387" opacity="0">
+    <animate attributeName="cy" values="22;2" dur="2.5s" begin="0.8s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.7;0" dur="2.5s" begin="0.8s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="26" cy="10" r="1" fill="#f38ba8" opacity="0">
+    <animate attributeName="cy" values="18;0" dur="1.8s" begin="1.2s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.6;0" dur="1.8s" begin="1.2s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="36" cy="12" r="0.8" fill="#f9e2af" opacity="0">
+    <animate attributeName="cy" values="16;-2" dur="2.2s" begin="0.4s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.7;0" dur="2.2s" begin="0.4s" repeatCount="indefinite"/>
+  </circle>
+</svg>
