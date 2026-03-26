@@ -690,18 +690,22 @@ def capture_screenshot(url: str, slug: str, soup: BeautifulSoup | None = None,
 
 
 def run_hugo() -> bool:
-    """Run hugo to rebuild the site."""
+    """Run hugo to rebuild the site. Retries once on failure."""
+    import time
     root = find_repo_root()
     hugo_bin = shutil.which("hugo")
     if not hugo_bin:
         console.print("[yellow]Warning: hugo not found in PATH, skipping site rebuild[/yellow]")
         return False
-    result = subprocess.run([hugo_bin, "--cleanDestinationDir"], cwd=root, capture_output=True, text=True)
-    if result.returncode != 0:
-        console.print(f"[red]Hugo build failed:[/red]\n{result.stderr}")
-        return False
-    console.print("[green]Site rebuilt successfully.[/green]")
-    return True
+    for attempt in range(2):
+        result = subprocess.run([hugo_bin, "--cleanDestinationDir"], cwd=root, capture_output=True, text=True)
+        if result.returncode == 0:
+            console.print("[green]Site rebuilt successfully.[/green]")
+            return True
+        if attempt == 0:
+            time.sleep(1)
+    console.print(f"[red]Hugo build failed:[/red]\n{result.stderr}")
+    return False
 
 
 _existing_tags_cache: list[str] | None = None
