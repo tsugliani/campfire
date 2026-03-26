@@ -1,0 +1,44 @@
+{{- $currentTags := .Params.tags -}}
+{{- if $currentTags -}}
+  {{- $currentPath := .RelPermalink -}}
+  {{- $candidates := slice -}}
+
+  {{- range where .Site.RegularPages "Params.tags" "!=" nil -}}
+    {{- if ne .RelPermalink $currentPath -}}
+      {{- $shared := intersect .Params.tags $currentTags -}}
+      {{- $count := len $shared -}}
+      {{- if gt $count 0 -}}
+        {{- $candidates = $candidates | append (dict "page" . "count" $count "shared" $shared) -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- $maxTags := len $currentTags -}}
+  {{- $results := slice -}}
+  {{- range (seq $maxTags 1) -}}
+    {{- $targetCount := . -}}
+    {{- range $candidates -}}
+      {{- if and (eq .count $targetCount) (lt (len $results) 5) -}}
+        {{- $results = $results | append . -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- if $results -}}
+  <section class="related-links">
+    <h2>Related Links</h2>
+    <ul class="related-links-list">
+      {{- range $results }}
+      <li class="related-link-item" data-href="{{ .page.RelPermalink }}">
+        <a href="{{ .page.RelPermalink }}" class="related-link-title">{{ .page.Title }}</a>
+        <span class="related-link-shared">
+          {{- range .shared }}
+            {{ partial "tag-badge.html" . }}
+          {{- end -}}
+        </span>
+      </li>
+      {{- end }}
+    </ul>
+  </section>
+  {{- end -}}
+{{- end -}}

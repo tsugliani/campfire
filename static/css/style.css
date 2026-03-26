@@ -499,6 +499,62 @@ main.container {
   font-style: italic;
 }
 
+/* Related links */
+.related-links {
+  margin-top: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.related-links h2 {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  color: var(--subtext1);
+}
+
+.related-links-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.related-link-item {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  padding: 0.6rem 1rem;
+  background: var(--surface0);
+  border: 1px solid var(--surface1);
+  border-radius: 8px;
+  transition: border-color 0.2s;
+  cursor: pointer;
+}
+
+.related-link-item:hover {
+  border-color: var(--lavender);
+}
+
+.related-link-title {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.related-link-title:hover {
+  color: var(--lavender);
+}
+
+.related-link-shared {
+  display: flex;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+  margin-left: auto;
+}
+
 /* Comments section on single page */
 .comments-section {
   margin-top: 2rem;

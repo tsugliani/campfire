@@ -37,6 +37,8 @@
     <script>function fallbackCopy(t,b){var a=document.createElement('textarea');a.value=t;a.style.position='fixed';a.style.opacity='0';document.body.appendChild(a);a.select();document.execCommand('copy');document.body.removeChild(a);b.textContent='Copied!';setTimeout(function(){b.textContent='Copy'},1500)}</script>
   </div>
 
+  {{ partial "related-links.html" . }}
+
   {{ with .Params.comments }}
   <section class="comments-section">
     <h2>Comments</h2>
