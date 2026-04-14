@@ -18,7 +18,7 @@ campfire-cli = "campfire_cli.main:app"
 
 [dependency-groups]
 dev = [
-    "pytest>=8.0.0",
+    "pytest>=9.0.3",
     "pytest-mock>=3.12.0",
 ]
 
