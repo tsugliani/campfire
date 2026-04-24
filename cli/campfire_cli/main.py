@@ -8,6 +8,7 @@ import os
 import re
 import subprocess
 import shutil
+import time
 from pathlib import Path
 from urllib.parse import urlparse, parse_qs
 
@@ -441,16 +442,26 @@ def _fetch_og_image(url: str, soup: BeautifulSoup | None = None) -> bytes | None
         parsed = urlparse(url)
         img_url = f"{parsed.scheme}://{parsed.netloc}{img_url}"
 
-    try:
-        resp = httpx.get(img_url, follow_redirects=True, timeout=15.0, headers={
-            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
-        })
-        resp.raise_for_status()
+    img_headers = {
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+    }
+    backoffs = [3, 5, 8]
+    for attempt in range(len(backoffs) + 1):
+        try:
+            resp = httpx.get(img_url, follow_redirects=True, timeout=15.0, headers=img_headers)
+        except Exception:
+            return None
+        if resp.status_code == 429 and attempt < len(backoffs):
+            wait = backoffs[attempt]
+            console.print(f"[yellow]og:image rate-limited (429), retrying in {wait}s...[/yellow]")
+            time.sleep(wait)
+            continue
+        if resp.status_code != 200:
+            return None
         ct = resp.headers.get("content-type", "")
         if ct.startswith("image") and "svg" not in ct:
             return resp.content
-    except Exception:
-        pass
+        return None
     return None
 
 
