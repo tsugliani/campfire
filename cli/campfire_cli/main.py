@@ -228,6 +228,27 @@ HTTP_HEADERS = {
 
 _YOUTUBE_HOSTS = {"www.youtube.com", "youtube.com", "m.youtube.com", "youtu.be", "www.youtu.be"}
 _TWITTER_HOSTS = {"x.com", "www.x.com", "twitter.com", "www.twitter.com"}
+_GITHUB_HOSTS = {"github.com", "www.github.com"}
+_GITHUB_RESERVED_OWNERS = {
+    "about", "codespaces", "collections", "discussions", "enterprise",
+    "events", "explore", "features", "issues", "join", "login",
+    "marketplace", "new", "notifications", "orgs", "pricing", "pulls",
+    "search", "settings", "sponsors", "topics", "trending",
+}
+
+
+def _github_repo_slug(url: str) -> str | None:
+    """Return 'owner/repo' if url is a github.com repo URL, else None."""
+    parsed = urlparse(url)
+    if parsed.hostname not in _GITHUB_HOSTS:
+        return None
+    parts = [p for p in parsed.path.split("/") if p]
+    if len(parts) < 2:
+        return None
+    owner, repo = parts[0], parts[1]
+    if owner in _GITHUB_RESERVED_OWNERS:
+        return None
+    return f"{owner}/{repo}"
 
 
 def _is_twitter_url(url: str) -> bool:
@@ -1012,6 +1033,11 @@ def fetch_metadata(url: str) -> dict:
         title = soup.title.string.strip()
     elif soup.h1:
         title = soup.h1.get_text(strip=True)
+
+    # GitHub repo URLs: force a clean "GitHub - owner/repo" title
+    gh_slug = _github_repo_slug(url)
+    if gh_slug:
+        title = f"GitHub - {gh_slug}"
 
     # Description
     description = ""
