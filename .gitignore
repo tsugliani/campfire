@@ -4,3 +4,7 @@ resources/
 cli/.venv/
 __pycache__/
 .env
+
+# transient local queue state
+.campfire-queue.jsonl
+.campfire-tag-aliases-proposed.txt

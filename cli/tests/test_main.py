@@ -557,3 +557,140 @@ class TestLoadDotenv:
         _chdir(tmp_repo, monkeypatch)
         # Should not raise
         main._load_dotenv()
+
+
+# ---------------------------------------------------------------------------
+# Tag canonicalization
+# ---------------------------------------------------------------------------
+
+class TestNormalizeTag:
+    def test_alias_synonym(self):
+        assert main.normalize_tag("go") == "golang"
+        assert main.normalize_tag("k8s") == "kubernetes"
+
+    def test_security_umbrella(self):
+        for t in ("2fa", "sso", "authorization", "encryption"):
+            assert main.normalize_tag(t) == "security"
+
+    def test_dehyphen(self):
+        # neutral (non-aliased) tag: exercises the de-hyphen mechanic only
+        assert main.normalize_tag("foo-bar") == "foobar"
+        assert "-" not in main.normalize_tag("best-practices")
+
+    def test_lowercases_and_trims(self):
+        assert main.normalize_tag("  GoLang ") == "golang"
+
+    def test_singularize_only_when_singular_known(self):
+        # neutral plurals not present in TAG_ALIASES
+        vocab = {"gadget", "sprocket"}
+        assert main.normalize_tag("gadgets", vocab) == "gadget"
+        assert main.normalize_tag("sprockets", vocab) == "sprocket"
+        # singular not in vocab -> keep plural
+        assert main.normalize_tag("widgets", vocab) == "widgets"
+
+    def test_never_singularize_proper_nouns(self):
+        # windows/kubernetes are in _NEVER_SINGULARIZE and not aliased
+        vocab = {"window", "kubernete"}
+        assert main.normalize_tag("windows", vocab) == "windows"
+        assert main.normalize_tag("kubernetes", vocab) == "kubernetes"
+
+    def test_no_double_ss(self):
+        # should not strip the trailing s from -ss words (neutral, non-aliased)
+        assert main.normalize_tag("boss", {"bos"}) == "boss"
+
+    def test_normalize_list_dedupes_preserving_order(self):
+        # both "terminal" duplicates collapse, order preserved
+        out = main.normalize_tag_list(["terminal", "go", "terminal", "k8s"])
+        assert out == ["terminal", "golang", "kubernetes"]
+
+
+# ---------------------------------------------------------------------------
+# Queue
+# ---------------------------------------------------------------------------
+
+class TestQueue:
+    def test_add_and_read(self, tmp_repo, monkeypatch):
+        _chdir(tmp_repo, monkeypatch)
+        main._reset_caches()
+        result = runner.invoke(main.app, ["queue", "add", "https://example.com/a", "https://example.com/b"])
+        assert result.exit_code == 0
+        jobs = main._queue_read()
+        assert [j["url"] for j in jobs] == ["https://example.com/a", "https://example.com/b"]
+        assert all(j["status"] == "pending" for j in jobs)
+
+    def test_add_dedupes_within_queue(self, tmp_repo, monkeypatch):
+        _chdir(tmp_repo, monkeypatch)
+        main._reset_caches()
+        runner.invoke(main.app, ["queue", "add", "https://example.com/a"])
+        runner.invoke(main.app, ["queue", "add", "https://example.com/a"])
+        assert len(main._queue_read()) == 1
+
+    def test_clear_done_only(self, tmp_repo, monkeypatch):
+        _chdir(tmp_repo, monkeypatch)
+        main._reset_caches()
+        main._queue_write([
+            {"url": "https://example.com/a", "status": "done"},
+            {"url": "https://example.com/b", "status": "pending"},
+        ])
+        runner.invoke(main.app, ["queue", "clear"])
+        jobs = main._queue_read()
+        assert [j["url"] for j in jobs] == ["https://example.com/b"]
+
+
+# ---------------------------------------------------------------------------
+# Queue review
+# ---------------------------------------------------------------------------
+
+class TestQueueReview:
+    def test_rename_link_moves_md_and_screenshot(self, sample_link_md, tmp_repo, monkeypatch):
+        _chdir(tmp_repo, monkeypatch)
+        main._reset_caches()
+        sdir = tmp_repo / "static" / "screenshots"
+        (sdir / "example-post.png").write_bytes(b"img")
+        (sdir / "example-post.generated").touch()
+
+        new_md = main._rename_link(sample_link_md, "example-post", "renamed-post")
+        assert new_md.name == "renamed-post.md"
+        assert not sample_link_md.exists()
+        assert (sdir / "renamed-post.png").exists()
+        assert (sdir / "renamed-post.generated").exists()
+        assert not (sdir / "example-post.png").exists()
+
+    def test_delete_link_files(self, sample_link_md, tmp_repo, monkeypatch):
+        _chdir(tmp_repo, monkeypatch)
+        main._reset_caches()
+        sdir = tmp_repo / "static" / "screenshots"
+        (sdir / "example-post.png").write_bytes(b"img")
+        main._delete_link_files(sample_link_md, "example-post")
+        assert not sample_link_md.exists()
+        assert not (sdir / "example-post.png").exists()
+
+    def test_review_nothing_to_do(self, tmp_repo, monkeypatch):
+        _chdir(tmp_repo, monkeypatch)
+        main._reset_caches()
+        result = runner.invoke(main.app, ["queue", "review"])
+        assert result.exit_code == 0
+        assert "Nothing to review" in result.stdout
+
+    @patch("campfire_cli.main.run_hugo", return_value=True)
+    def test_review_keep_is_noop(self, mock_hugo, sample_link_md, tmp_repo, monkeypatch):
+        _chdir(tmp_repo, monkeypatch)
+        main._reset_caches()
+        main._queue_write([{"url": "https://example.com/post", "status": "done",
+                            "permalink": "2026/w12/example-post"}])
+        result = runner.invoke(main.app, ["queue", "review"], input="k\n")
+        assert result.exit_code == 0
+        assert sample_link_md.exists()  # untouched
+        mock_hugo.assert_not_called()  # nothing changed
+
+    @patch("campfire_cli.main.run_hugo", return_value=True)
+    def test_review_delete(self, mock_hugo, sample_link_md, tmp_repo, monkeypatch):
+        _chdir(tmp_repo, monkeypatch)
+        main._reset_caches()
+        main._queue_write([{"url": "https://example.com/post", "status": "done",
+                            "permalink": "2026/w12/example-post"}])
+        # action "d", then confirm "y"
+        result = runner.invoke(main.app, ["queue", "review"], input="d\ny\n")
+        assert result.exit_code == 0
+        assert not sample_link_md.exists()
+        mock_hugo.assert_called_once()

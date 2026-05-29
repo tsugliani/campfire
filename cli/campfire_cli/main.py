@@ -24,8 +24,10 @@ from rich.table import Table
 app = typer.Typer(help="Campfire — weekly link curation CLI", no_args_is_help=True)
 link_app = typer.Typer(help="Single-link operations: add, delete, comment", no_args_is_help=True)
 site_app = typer.Typer(help="Site management: backup, restore, retag, redate, rebuild, wipe", no_args_is_help=True)
+queue_app = typer.Typer(help="Batch queue: add many links, process them in one pass", no_args_is_help=True)
 app.add_typer(link_app, name="link")
 app.add_typer(site_app, name="site")
+app.add_typer(queue_app, name="queue")
 
 ALLOWED_TAGS = {
     "cloud", "infrastructure", "networking", "storage", "devops", "monitoring",
@@ -34,7 +36,321 @@ ALLOWED_TAGS = {
     "desktop", "ux", "troubleshooting", "virtualization", "database",
     "opensource", "performance", "testing", "hardware", "career",
     "vmware", "python", "kubernetes", "rust", "golang", "docker", "ssh",
+    # VMware ecosystem — first-class tags (core technology watch)
+    "vcf", "nsx", "vsan", "vcd", "vcfa", "vcfops",
+    # mesh/VPN networking — first-class tags
+    "tailscale", "netbird", "wireguard",
 }
+
+# --- Tag canonicalization -------------------------------------------------
+# Maps tag variants -> a single canonical tag. Edit this dict to merge tags;
+# it is the one place to maintain the vocabulary. Applied both at write-time
+# (add/tag) and in bulk by `campfire-cli site normalize-tags`.
+#
+# Rules also applied automatically (see normalize_tag):
+#   - lowercased and trimmed
+#   - hyphens/underscores/spaces collapsed away (single-word tags)
+#   - depluralized ONLY when the singular form already exists in the corpus
+#     (data-safe: turns hypervisors->hypervisor, templates->template, etc.)
+TAG_ALIASES = {
+    # language / tool synonyms
+    "go": "golang",
+    "k8s": "kubernetes",
+    "py": "python",
+    # security umbrella
+    "2fa": "security",
+    "mfa": "security",
+    "sso": "security",
+    "authentication": "security",
+    "authorization": "security",
+    "passkey": "security",
+    "passkeys": "security",
+    "cryptography": "security",
+    "encryption": "security",
+    "privacy": "security",
+    "cve": "security",
+    "exploit": "security",
+    # homelab
+    "lab": "homelab",
+    # ci/cd
+    "cicd": "ci",
+    "continuousintegration": "ci",
+    # containers
+    "compose": "containers",
+    "container": "containers",
+    # observability
+    "logging": "monitoring",
+    "observability": "monitoring",
+    "metrics": "monitoring",
+    # ai
+    "llm": "ai",
+    "llms": "ai",
+    "claudecode": "ai",
+    "genai": "ai",
+
+    # --- reviewed bulk merges (proposed by `site suggest-aliases`, curated by hand) ---
+    # VMware ecosystem variants -> canonical product tags
+    "vcfoperations": "vcfops",
+    "vcf9": "vcf",
+    "grpc": "api",
+    "rest": "api",
+    "restapi": "api",
+    "ansible": "automation",
+    "vbr": "backup",
+    "cloudflare": "cloud",
+    "dbaas": "cloud",
+    "multicloud": "cloud",
+    "oracle": "cloud",
+    "saas": "cloud",
+    "serverless": "cloud",
+    "vps": "cloud",
+    "oci": "containers",
+    "podman": "containers",
+    "quadlet": "containers",
+    "mysql": "database",
+    "postgres": "database",
+    "postgresql": "database",
+    "psql": "database",
+    "redis": "database",
+    "sql": "database",
+    "sqlite": "database",
+    "sqlserver": "database",
+    "gui": "desktop",
+    "codereview": "development",
+    "coding": "development",
+    "developertool": "development",
+    "devtools": "development",
+    "editor": "development",
+    "ide": "development",
+    "lazyvim": "development",
+    "programming": "development",
+    "refactoring": "development",
+    "softwareengineering": "development",
+    "vim": "development",
+    "vscode": "development",
+    "ci": "devops",
+    "deployment": "devops",
+    "installer": "devops",
+    "operations": "devops",
+    "postdeployment": "devops",
+    "release": "devops",
+    "unattended": "devops",
+    "diff": "git",
+    "gerrit": "git",
+    "github": "git",
+    "gitlab": "git",
+    "jj": "git",
+    "jujutsu": "git",
+    "lazygit": "git",
+    "versioncontrol": "git",
+    "versioning": "git",
+    "amd": "hardware",
+    "cooling": "hardware",
+    "cpu": "hardware",
+    "gpu": "hardware",
+    "intel": "hardware",
+    "lto": "hardware",
+    "nvidia": "hardware",
+    "riscv": "hardware",
+    "usb": "hardware",
+    "home": "homelab",
+    "homeassistant": "homelab",
+    "raspberry": "homelab",
+    "selfhostable": "homelab",
+    "selfhosted": "homelab",
+    "selfhosting": "homelab",
+    "smart.home": "homelab",
+    "availability": "infrastructure",
+    "backup": "infrastructure",
+    "cloudinit": "infrastructure",
+    "datacenter": "infrastructure",
+    "downtime": "infrastructure",
+    "ha": "infrastructure",
+    "highavailability": "infrastructure",
+    "iac": "infrastructure",
+    "packer": "infrastructure",
+    "reliability": "infrastructure",
+    "sddc": "infrastructure",
+    "terraform": "infrastructure",
+    "terragrunt": "infrastructure",
+    "etcd": "kubernetes",
+    "namespaces": "kubernetes",
+    "rancher": "kubernetes",
+    "talos": "kubernetes",
+    "vks": "kubernetes",
+    "workload": "kubernetes",
+    "alpine": "linux",
+    "arch": "linux",
+    "debian": "linux",
+    "fedora": "linux",
+    "freebsd": "linux",
+    "nix": "linux",
+    "nixos": "linux",
+    "omarchy": "linux",
+    "redhat": "linux",
+    "ubuntu": "linux",
+    "homebrew": "macos",
+    "bpftrace": "monitoring",
+    "datadog": "monitoring",
+    "ebpf": "monitoring",
+    "grafana": "monitoring",
+    "healthchecks": "monitoring",
+    "incidents": "monitoring",
+    "log": "monitoring",
+    "rsyslog": "monitoring",
+    "telemetry": "monitoring",
+    "uptime": "monitoring",
+    "anycast": "networking",
+    "bandwidth": "networking",
+    "bgp": "networking",
+    "cgnat": "networking",
+    "connectivity": "networking",
+    "dns": "networking",
+    "edge": "networking",
+    "flowspec": "networking",
+    "gigabit": "networking",
+    "global": "networking",
+    "http": "networking",
+    "ipv4": "networking",
+    "ipv6": "networking",
+    "mtu": "networking",
+    "network": "networking",
+    "rdma": "networking",
+    "remoteaccess": "networking",
+    "routing": "networking",
+    "traceroute": "networking",
+    "transport": "networking",
+    "ttl": "networking",
+    "whois": "networking",
+    "community": "opensource",
+    "openource": "opensource",
+    "upstream": "opensource",
+    "benchmark": "performance",
+    "benchmarking": "performance",
+    "caching": "performance",
+    "optimization": "performance",
+    "scalability": "performance",
+    "acme": "security",
+    "authentik": "security",
+    "certificates": "security",
+    "firewall": "security",
+    "https": "security",
+    "identity": "security",
+    "jwt": "security",
+    "keycloak": "security",
+    "letsencrypt": "security",
+    "nftables": "security",
+    "oauth2": "security",
+    "oidc": "security",
+    "pam": "security",
+    "rbac": "security",
+    "scim": "security",
+    "tls": "security",
+    "vpn": "security",
+    "webauthn": "security",
+    "yubikey": "security",
+    "zerotrust": "security",
+    "zitadel": "security",
+    "sshd": "ssh",
+    "ceph": "storage",
+    "disk": "storage",
+    "iscsi": "storage",
+    "lvm": "storage",
+    "nfs": "storage",
+    "nvme": "storage",
+    "pvc": "storage",
+    "raid": "storage",
+    "volumes": "storage",
+    "zfs": "storage",
+    "alacritty": "terminal",
+    "ascii": "terminal",
+    "console": "terminal",
+    "consoletool": "terminal",
+    "ghostty": "terminal",
+    "monospaced": "terminal",
+    "multiplexer": "terminal",
+    "pty": "terminal",
+    "terminalui": "terminal",
+    "tmux": "terminal",
+    "tui": "terminal",
+    "wezterm": "terminal",
+    "mock": "testing",
+    "pytest": "testing",
+    "tdd": "testing",
+    "debugging": "troubleshooting",
+    "diagnostics": "troubleshooting",
+    "lldb": "troubleshooting",
+    "outage": "troubleshooting",
+    "animation": "ux",
+    "colors": "ux",
+    "design": "ux",
+    "font": "ux",
+    "hue": "ux",
+    "rendering": "ux",
+    "shapes": "ux",
+    "typography": "ux",
+    "ui": "ux",
+    "vectors": "ux",
+    "hypervisor": "virtualization",
+    "kvm": "virtualization",
+    "microvm": "virtualization",
+    "nested": "virtualization",
+    "nestedvirtualization": "virtualization",
+    "pvm": "virtualization",
+    "esx": "vmware",
+    "esxcli": "vmware",
+    "esxi": "vmware",
+    "sddcmanager": "vmware",
+    "vcenter": "vmware",
+    "caddy": "web",
+    "css": "web",
+    "hugo": "web",
+    "nginx": "web",
+    "staticsitegenerator": "web",
+    "webbian": "web",
+    "webserver": "web",
+    "powershell": "windows",
+}
+
+# Tags ending in "s" that must never be depluralized (proper nouns / not plurals).
+_NEVER_SINGULARIZE = {
+    "https", "kubernetes", "windows", "macos", "devops", "aws", "dns",
+    " os", "containers", "tools", "facts", "vcfops",
+}
+
+
+def _singularize(tag: str, vocab: set[str]) -> str:
+    """Depluralize only when the singular form is itself a known tag (data-safe)."""
+    if tag in _NEVER_SINGULARIZE:
+        return tag
+    if tag.endswith("s") and not tag.endswith("ss") and len(tag) > 3 and tag[:-1] in vocab:
+        return tag[:-1]
+    return tag
+
+
+def normalize_tag(tag: str, vocab: set[str] | None = None) -> str:
+    """Canonicalize a single tag: lowercase, de-hyphenate, alias, singularize."""
+    vocab = vocab or set()
+    t = tag.strip().lower().replace("-", "").replace("_", "").replace(" ", "").replace("/", "")
+    # resolve alias chains (bounded)
+    seen: set[str] = set()
+    while t in TAG_ALIASES and t not in seen:
+        seen.add(t)
+        t = TAG_ALIASES[t]
+    t = _singularize(t, vocab)
+    if t in TAG_ALIASES:
+        t = TAG_ALIASES[t]
+    return t
+
+
+def normalize_tag_list(tags: list[str], vocab: set[str] | None = None) -> list[str]:
+    """Canonicalize and de-duplicate a list of tags, preserving order."""
+    out: list[str] = []
+    for t in tags:
+        c = normalize_tag(t, vocab)
+        if c and c not in out:
+            out.append(c)
+    return out
 
 _repo_root_cache: Path | None = None
 _MONTHS = {"jan": 1, "feb": 2, "mar": 3, "apr": 4, "may": 5, "jun": 6,
@@ -87,10 +403,11 @@ def find_repo_root() -> Path:
 
 def _reset_caches() -> None:
     """Reset all caches (for testing)."""
-    global _repo_root_cache, _existing_tags_cache, _llm_config_cache
+    global _repo_root_cache, _existing_tags_cache, _llm_config_cache, _scan_cache
     _repo_root_cache = None
     _existing_tags_cache = None
     _llm_config_cache = False
+    _scan_cache = None
 
 
 # Keep backward compat for tests
@@ -145,18 +462,36 @@ def slugify(text: str, max_len: int = 60) -> str:
     return slug[:max_len] if slug else "untitled"
 
 
-def find_duplicate_url(url: str) -> Path | None:
-    """Scan all link files for a matching url_link."""
-    cdir = content_dir()
-    for md_file in cdir.rglob("*.md"):
+_scan_cache: list[tuple[Path, dict]] | None = None
+
+
+def _scan_links() -> list[tuple[Path, dict]]:
+    """Scan + parse every link file once. Cached per session (one disk walk).
+
+    Both find_duplicate_url and get_existing_tags derive from this, so a single
+    `add` no longer parses all content files twice.
+    """
+    global _scan_cache
+    if _scan_cache is not None:
+        return _scan_cache
+    out: list[tuple[Path, dict]] = []
+    for md_file in content_dir().rglob("*.md"):
         if md_file.name == "_index.md":
             continue
         try:
             fm, _ = parse_front_matter(md_file)
-            if fm and fm.get("url_link") == url:
-                return md_file
         except Exception:
             continue
+        out.append((md_file, fm))
+    _scan_cache = out
+    return out
+
+
+def find_duplicate_url(url: str) -> Path | None:
+    """Scan all link files for a matching url_link."""
+    for md_file, fm in _scan_links():
+        if fm and fm.get("url_link") == url:
+            return md_file
     return None
 
 
@@ -689,7 +1024,9 @@ def capture_screenshot(url: str, slug: str, soup: BeautifulSoup | None = None,
                     browser = p.chromium.launch(args=["--no-sandbox", "--disable-setuid-sandbox"])
                     page = browser.new_page(viewport={"width": 1280, "height": 800})
                     page.goto(url, wait_until="domcontentloaded", timeout=15000)
-                    page.wait_for_timeout(2000)
+                    # Settle time for lazy images/fonts. Tunable via env for
+                    # speed-vs-quality; default trimmed from 2000ms.
+                    page.wait_for_timeout(int(os.environ.get("SCREENSHOT_SETTLE_MS", "1200")))
                     # Detect Cloudflare challenge page
                     page_title = page.title().lower()
                     if "just a moment" in page_title or "attention required" in page_title or "cloudflare" in page_title:
@@ -748,17 +1085,10 @@ def get_existing_tags() -> list[str]:
     global _existing_tags_cache
     if _existing_tags_cache is not None:
         return _existing_tags_cache
-    cdir = content_dir()
     tags: set[str] = set()
-    for md_file in cdir.rglob("*.md"):
-        if md_file.name == "_index.md":
-            continue
-        try:
-            fm, _ = parse_front_matter(md_file)
-            for t in fm.get("tags") or []:
-                tags.add(t.lower())
-        except Exception:
-            continue
+    for _md_file, fm in _scan_links():
+        for t in fm.get("tags") or []:
+            tags.add(t.lower())
     _existing_tags_cache = sorted(tags)
     return _existing_tags_cache
 
@@ -832,8 +1162,16 @@ def _format_elapsed(elapsed: float) -> str:
     return f"{mins}m {secs:02d}s" if mins else f"{elapsed:.1f}s"
 
 
-def _llm_chat(prompt: str, status_msg: str = "Thinking...") -> str | None:
-    """Send a chat completion request to an OpenAI-compatible endpoint."""
+def _llm_chat(prompt: str, status_msg: str = "Thinking...", timeout: float | None = None, max_tokens: int | None = None, include_reasoning: bool = False) -> str | None:
+    """Send a chat completion request to an OpenAI-compatible endpoint.
+
+    Timeout (seconds) resolves to: $LLM_TIMEOUT if set, else the `timeout`
+    arg, else 120. Big calls like tag clustering pass a larger default.
+    """
+    env_t = os.environ.get("LLM_TIMEOUT", "").strip()
+    req_timeout = float(env_t) if env_t else (timeout or 120.0)
+    env_mt = os.environ.get("LLM_MAX_TOKENS", "").strip()
+    req_max_tokens = int(env_mt) if env_mt else max_tokens
     config = _llm_config()
     if not config:
         console.print("[yellow]No LLM configured — skipping (set LLM_BASE_URL or run Ollama/LM Studio)[/yellow]")
@@ -857,6 +1195,8 @@ def _llm_chat(prompt: str, status_msg: str = "Thinking...") -> str | None:
                 "temperature": 0.1,
                 "messages": [{"role": "user", "content": prompt}],
             }
+            if req_max_tokens:
+                payload["max_tokens"] = req_max_tokens
 
             def _request():
                 try:
@@ -867,7 +1207,7 @@ def _llm_chat(prompt: str, status_msg: str = "Thinking...") -> str | None:
                             "Content-Type": "application/json",
                         },
                         json=payload,
-                        timeout=120.0,
+                        timeout=req_timeout,
                     )
                     resp.raise_for_status()
                     result_holder.append(resp.json())
@@ -892,7 +1232,18 @@ def _llm_chat(prompt: str, status_msg: str = "Thinking...") -> str | None:
                 raise error_holder[0]
 
             data = result_holder[0]
-            result = data["choices"][0]["message"]["content"].strip()
+            msg = data["choices"][0]["message"]
+            # Reasoning models (qwen3, etc.) sometimes return empty
+            # "content" and put everything in "reasoning_content"; fall
+            # back to it so callers still get the model's text.
+            content = (msg.get("content") or "").strip()
+            reasoning = (msg.get("reasoning_content") or "").strip()
+            if include_reasoning:
+                # Some reasoning models put the bulk of the answer in the
+                # thinking trace; return both so callers can parse either.
+                result = (content + "\n" + reasoning).strip()
+            else:
+                result = content or reasoning
             console.print(f"[dim]LLM responded in {timer_str}[/dim]")
             return result
         except Exception as e:
@@ -958,6 +1309,8 @@ Return ONLY a comma-separated list. Nothing else."""
     if not raw:
         return []
     tags = _clean_llm_tag_response(raw)[:6]
+    # Canonicalize against the existing vocabulary so we don't grow new variants.
+    tags = normalize_tag_list(tags, set(existing_tags))
     console.print(f"[green]LLM suggested tags:[/green] {', '.join(tags)}")
     return tags
 
@@ -1151,6 +1504,68 @@ def require_author(author_flag: str | None) -> str:
     return f"@{username}"
 
 
+def _finalize_link(url: str, title: str, description: str, tags: list[str], *,
+                   year: int, week: int, use_link_date: bool = False,
+                   screenshot_path: str | None = None, soup=None) -> Path:
+    """Resolve the date, write the markdown file, and capture a screenshot.
+
+    Does NOT rebuild the site (callers decide when to run Hugo). Returns the
+    written file Path. Shared by `link add` and `queue process`.
+    """
+    slug = slugify(title)
+
+    link_date = datetime.date.today()
+    if use_link_date:
+        pub_date = _extract_date_from_url(url)
+        if not pub_date and _is_twitter_url(url):
+            tw = _fetch_twitter_metadata(url)
+            if tw and tw.get("date"):
+                pub_date = tw["date"]
+        if not pub_date:
+            with console.status(f"Fetching publication date for [cyan]{url}[/cyan]..."):
+                pub_date = _fetch_published_date(url)
+        if pub_date:
+            link_date = pub_date
+            pub_year, pub_week, _ = pub_date.isocalendar()
+            year = pub_year
+            week = pub_week
+            console.print(f"[green]Using link date:[/green] {pub_date} ({year}/w{week:02d})")
+        else:
+            console.print("[yellow]Could not detect link date, using today.[/yellow]")
+
+    week_dir = ensure_week_dir(year, week)
+    file_path = week_dir / f"{slug}.md"
+
+    fm = {
+        "title": title,
+        "url_link": url,
+        "tags": tags,
+        "description": description,
+        "date": link_date.isoformat(),
+        "year": year,
+        "week": week,
+        "comments": [],
+    }
+    write_front_matter(file_path, fm)
+    console.print(f"\n[green]Link saved to:[/green] {file_path.relative_to(find_repo_root())}")
+
+    # Preview image
+    if screenshot_path:
+        src = Path(screenshot_path).expanduser()
+        if src.exists():
+            out_dir = screenshots_dir()
+            out_dir.mkdir(parents=True, exist_ok=True)
+            dest = out_dir / f"{slug}.png"
+            shutil.copy2(src, dest)
+            console.print(f"[green]Screenshot copied:[/green] {dest.relative_to(find_repo_root())}")
+        else:
+            console.print(f"[yellow]Screenshot file not found:[/yellow] {screenshot_path}")
+    else:
+        capture_screenshot(url, slug, soup=soup, title=title, description=description, tags=tags)
+
+    return file_path
+
+
 @link_app.command()
 def add(
     url: str = typer.Argument(..., help="URL of the link to add"),
@@ -1160,6 +1575,7 @@ def add(
     unattended: bool = typer.Option(False, "--unattended", "-u", help="Auto-accept all metadata, no prompts"),
     use_link_date: bool = typer.Option(False, "--use-link-date", "-d", help="Use the link's publication date instead of today"),
     screenshot: str | None = typer.Option(None, "--screenshot", "-s", help="Path to a screenshot image file"),
+    no_build: bool = typer.Option(False, "--no-build", help="Skip the Hugo site rebuild (do it later with `site rebuild`)"),
 ) -> None:
     """Add a new link to the campfire collection."""
     # Determine year/week
@@ -1198,63 +1614,18 @@ def add(
         tags_str = Prompt.ask("Tags (comma-separated)", default=", ".join(meta["tags"]))
         tags = [t.strip().lower() for t in tags_str.split(",") if t.strip()]
 
-    # Generate slug and write file
-    slug = slugify(title)
-
-    link_date = datetime.date.today()
-    if use_link_date:
-        pub_date = _extract_date_from_url(url)
-        if not pub_date and _is_twitter_url(url):
-            tw = _fetch_twitter_metadata(url)
-            if tw and tw.get("date"):
-                pub_date = tw["date"]
-        if not pub_date:
-            with console.status(f"Fetching publication date for [cyan]{url}[/cyan]..."):
-                pub_date = _fetch_published_date(url)
-        if pub_date:
-            link_date = pub_date
-            pub_year, pub_week, _ = pub_date.isocalendar()
-            year = pub_year
-            week = pub_week
-            console.print(f"[green]Using link date:[/green] {pub_date} ({year}/w{week:02d})")
-        else:
-            console.print("[yellow]Could not detect link date, using today.[/yellow]")
-
-    # Re-ensure week dir in case date changed it
-    week_dir = ensure_week_dir(year, week)
-    file_path = week_dir / f"{slug}.md"
-
-    fm = {
-        "title": title,
-        "url_link": url,
-        "tags": tags,
-        "description": description,
-        "date": link_date.isoformat(),
-        "year": year,
-        "week": week,
-        "comments": [],
-    }
-    write_front_matter(file_path, fm)
-
-    console.print(f"\n[green]Link saved to:[/green] {file_path.relative_to(find_repo_root())}")
-
-    # Preview image
-    if screenshot:
-        # User provided a screenshot file
-        src = Path(screenshot).expanduser()
-        if src.exists():
-            out_dir = screenshots_dir()
-            out_dir.mkdir(parents=True, exist_ok=True)
-            dest = out_dir / f"{slug}.png"
-            shutil.copy2(src, dest)
-            console.print(f"[green]Screenshot copied:[/green] {dest.relative_to(find_repo_root())}")
-        else:
-            console.print(f"[yellow]Screenshot file not found:[/yellow] {screenshot}")
-    else:
-        capture_screenshot(url, slug, soup=meta.get("_soup"), title=title, description=description, tags=tags)
+    # Write file + screenshot (no rebuild here)
+    _finalize_link(
+        url, title, description, tags,
+        year=year, week=week,
+        use_link_date=use_link_date,
+        screenshot_path=screenshot,
+        soup=meta.get("_soup"),
+    )
 
     # Rebuild
-    run_hugo()
+    if not no_build:
+        run_hugo()
 
 
 @link_app.command()
@@ -2056,6 +2427,479 @@ def redate_bulk(
 
     console.print(f"\n[green]Moved {moved} links.[/green]")
     run_hugo()
+
+
+# ===========================================================================
+# Batch queue
+# ===========================================================================
+# A simple JSONL queue (one job per line) lets you collect links all week with
+# an instant, network-free `queue add`, then fetch + screenshot everything in a
+# single `queue process` pass that rebuilds Hugo only ONCE at the end (instead
+# of paying the ~15s rebuild per link). The file lives at the repo root and is
+# gitignored — it is transient per-user state.
+
+
+def _queue_path() -> Path:
+    return find_repo_root() / ".campfire-queue.jsonl"
+
+
+def _queue_read() -> list[dict]:
+    path = _queue_path()
+    if not path.exists():
+        return []
+    jobs: list[dict] = []
+    for line in path.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            jobs.append(json.loads(line))
+        except json.JSONDecodeError:
+            continue
+    return jobs
+
+
+def _queue_write(jobs: list[dict]) -> None:
+    path = _queue_path()
+    path.write_text("".join(json.dumps(j) + "\n" for j in jobs), encoding="utf-8")
+
+
+@queue_app.command(name="add")
+def queue_add(
+    urls: list[str] = typer.Argument(..., help="One or more URLs to enqueue"),
+    use_link_date: bool = typer.Option(False, "--use-link-date", "-d", help="Use each link's publication date when processed"),
+) -> None:
+    """Append one or more URLs to the queue. Instant — no network, no rebuild."""
+    jobs = _queue_read()
+    known = {j["url"] for j in jobs}
+    added = 0
+    for url in urls:
+        url = url.strip()
+        if not url:
+            continue
+        if url in known:
+            console.print(f"[dim]Already queued:[/dim] {url}")
+            continue
+        dup = find_duplicate_url(url)
+        if dup:
+            console.print(f"[yellow]Already on site, skipping:[/yellow] {url}")
+            continue
+        jobs.append({"url": url, "status": "pending", "use_link_date": use_link_date})
+        known.add(url)
+        added += 1
+        console.print(f"[green]Queued:[/green] {url}")
+    _queue_write(jobs)
+    pending = sum(1 for j in jobs if j.get("status") == "pending")
+    console.print(f"\n[bold]{added}[/bold] added — [bold]{pending}[/bold] pending in queue. Run [cyan]campfire-cli queue process[/cyan].")
+
+
+@queue_app.command(name="list")
+def queue_list() -> None:
+    """Show the current queue."""
+    jobs = _queue_read()
+    if not jobs:
+        console.print("[dim]Queue is empty.[/dim]")
+        return
+    table = Table(title="Link queue")
+    table.add_column("#", justify="right", style="dim")
+    table.add_column("Status")
+    table.add_column("URL")
+    style = {"pending": "yellow", "done": "green", "failed": "red"}
+    for i, j in enumerate(jobs, 1):
+        st = j.get("status", "pending")
+        table.add_row(str(i), f"[{style.get(st, 'white')}]{st}[/]", j.get("url", ""))
+    console.print(table)
+
+
+@queue_app.command(name="clear")
+def queue_clear(
+    all_jobs: bool = typer.Option(False, "--all", "-a", help="Remove every job (default: only done jobs)"),
+) -> None:
+    """Remove processed jobs from the queue (or everything with --all)."""
+    jobs = _queue_read()
+    if all_jobs:
+        _queue_path().unlink(missing_ok=True)
+        console.print(f"[green]Cleared all {len(jobs)} jobs.[/green]")
+        return
+    kept = [j for j in jobs if j.get("status") != "done"]
+    _queue_write(kept)
+    console.print(f"[green]Cleared {len(jobs) - len(kept)} done jobs[/green] — {len(kept)} remain.")
+
+
+@queue_app.command(name="process")
+def queue_process(
+    week: int | None = typer.Option(None, "--week", "-w", help="Week number (default: current)"),
+    year: int | None = typer.Option(None, "--year", "-y", help="Year (default: current)"),
+    retry_failed: bool = typer.Option(False, "--retry-failed", help="Also retry jobs previously marked failed"),
+    no_build: bool = typer.Option(False, "--no-build", help="Skip the final Hugo rebuild"),
+) -> None:
+    """Fetch metadata + screenshots for all pending jobs, then rebuild once."""
+    default_year, default_week = current_iso_week()
+    year = year or default_year
+    week = week or default_week
+
+    jobs = _queue_read()
+    statuses = {"pending"} | ({"failed"} if retry_failed else set())
+    todo = [j for j in jobs if j.get("status") in statuses]
+    if not todo:
+        console.print("[dim]Nothing to process.[/dim]")
+        return
+
+    console.print(f"Processing [bold]{len(todo)}[/bold] queued link(s)...\n")
+    ok = fail = 0
+    for i, job in enumerate(todo, 1):
+        url = job["url"]
+        console.print(f"[bold][{i}/{len(todo)}][/bold] {url}")
+        try:
+            meta = fetch_metadata(url)
+            title = meta["title"] or url
+            fp = _finalize_link(
+                url, title, meta["description"], meta["tags"],
+                year=year, week=week,
+                use_link_date=job.get("use_link_date", False),
+                soup=meta.get("_soup"),
+            )
+            # Derive the permalink from the file location (robust even if the
+            # date moved it to another week) so `queue review` can find it.
+            job["permalink"] = str(fp.relative_to(content_dir()).with_suffix(""))
+            job["status"] = "done"
+            ok += 1
+        except Exception as e:  # keep the batch going; record the failure
+            job["status"] = "failed"
+            job["error"] = str(e)
+            fail += 1
+            console.print(f"  [red]Failed:[/red] {e}")
+        _queue_write(jobs)  # persist after each job so the queue is resumable
+        console.print("")
+
+    console.print(f"[green]Done:[/green] {ok} processed, {fail} failed.")
+    if ok and not no_build:
+        run_hugo()
+    _reset_caches()  # so the summary reads freshly-written files
+    _print_batch_summary(jobs)
+    if ok:
+        console.print("\n[dim]Review/fix them with[/dim] [cyan]campfire-cli queue review[/cyan]")
+
+
+def _print_batch_summary(jobs: list[dict]) -> None:
+    """Compact table of the processed batch for at-a-glance validation."""
+    done = [j for j in jobs if j.get("status") == "done" and j.get("permalink")]
+    if not done:
+        return
+    table = Table(title="Processed links")
+    table.add_column("Permalink", style="cyan", no_wrap=True)
+    table.add_column("Title")
+    table.add_column("Tags", style="green")
+    for j in done:
+        found = _find_link_by_permalink(j["permalink"])
+        if not found:
+            continue
+        _md, fm, _slug = found
+        table.add_row(j["permalink"], (fm.get("title") or "")[:60], ", ".join(fm.get("tags") or []))
+    console.print("")
+    console.print(table)
+
+
+def _rename_link(md_path, old_slug: str, new_slug: str):
+    """Rename a link's .md and screenshot files to match a new slug.
+
+    Returns the new md Path. Only used during review of a freshly-added batch
+    (these permalinks are not yet indexed, so renaming is safe)."""
+    new_md = md_path.parent / f"{new_slug}.md"
+    md_path.rename(new_md)
+    sdir = screenshots_dir()
+    for suffix in (".png", ".generated"):
+        old_f = sdir / f"{old_slug}{suffix}"
+        if old_f.exists():
+            old_f.rename(sdir / f"{new_slug}{suffix}")
+    return new_md
+
+
+def _delete_link_files(md_path, slug: str) -> None:
+    md_path.unlink(missing_ok=True)
+    sdir = screenshots_dir()
+    for suffix in (".png", ".generated"):
+        (sdir / f"{slug}{suffix}").unlink(missing_ok=True)
+
+
+def _print_review_card(fm: dict, permalink: str, slug: str) -> None:
+    sdir = screenshots_dir()
+    has_shot = (sdir / f"{slug}.png").exists()
+    is_card = (sdir / f"{slug}.generated").exists()
+    shot = "generated card" if is_card else ("screenshot" if has_shot else "[red]none[/red]")
+    desc = fm.get("description") or ""
+    body = (
+        f"[bold]{fm.get('title') or '(no title)'}[/bold]\n"
+        f"[dim]{fm.get('url_link') or ''}[/dim]\n\n"
+        f"{desc[:300]}{'...' if len(desc) > 300 else ''}\n\n"
+        f"[green]tags:[/green] {', '.join(fm.get('tags') or []) or '(none)'}\n"
+        f"[dim]image:[/dim] {shot}"
+    )
+    console.print(Panel(body, title=permalink, border_style="cyan"))
+
+
+@queue_app.command(name="review")
+def queue_review(
+    no_build: bool = typer.Option(False, "--no-build", help="Skip the final Hugo rebuild"),
+) -> None:
+    """Step through the processed batch to validate/fix title, description, tags.
+
+    For each link: keep (Enter), edit fields, retag via LLM, recapture the
+    screenshot, or delete. One Hugo rebuild at the end if anything changed.
+    """
+    jobs = _queue_read()
+    done = [j for j in jobs if j.get("status") == "done" and j.get("permalink")]
+    if not done:
+        console.print("[dim]Nothing to review — run `queue process` first.[/dim]")
+        return
+
+    _print_batch_summary(jobs)
+    changed = False
+    for idx, job in enumerate(done, 1):
+        _reset_caches()
+        found = _find_link_by_permalink(job["permalink"])
+        if not found:
+            console.print(f"[yellow]Missing (deleted?):[/yellow] {job['permalink']}")
+            continue
+        md, fm, slug = found
+
+        console.print(f"\n[bold dim]({idx}/{len(done)})[/bold dim]")
+        _print_review_card(fm, job["permalink"], slug)
+        action = Prompt.ask(
+            "Action (k=keep, e=edit, t=retag, s=screenshot, d=delete, q=quit)",
+            choices=["k", "e", "t", "s", "d", "q"], default="k",
+        )
+
+        if action == "q":
+            break
+        if action == "k":
+            continue
+
+        if action == "d":
+            if Confirm.ask(f"Delete {job['permalink']}?", default=False):
+                _delete_link_files(md, slug)
+                job["status"] = "deleted"
+                _queue_write(jobs)
+                changed = True
+                console.print("[red]Deleted.[/red]")
+            continue
+
+        if action == "t":
+            page_text = _fetch_page_text(fm.get("url_link", ""))
+            new_tags = suggest_tags_with_llm(fm.get("title", ""), fm.get("description", ""), page_text, get_existing_tags())
+            if new_tags and new_tags != fm.get("tags"):
+                fm["tags"] = new_tags
+                write_front_matter(md, fm, "")
+                changed = True
+            continue
+
+        if action == "s":
+            capture_screenshot(fm.get("url_link", ""), slug, title=fm.get("title", ""),
+                               description=fm.get("description", ""), tags=fm.get("tags") or [])
+            changed = True
+            continue
+
+        if action == "e":
+            new_title = Prompt.ask("Title", default=fm.get("title", ""))
+            new_desc = Prompt.ask("Description", default=fm.get("description", ""))
+            tags_str = Prompt.ask("Tags (comma-separated)", default=", ".join(fm.get("tags") or []))
+            new_tags = normalize_tag_list(
+                [t.strip().lower() for t in tags_str.split(",") if t.strip()],
+                set(get_existing_tags()),
+            )
+            fm["title"], fm["description"], fm["tags"] = new_title, new_desc, new_tags
+
+            new_slug = slugify(new_title)
+            if new_slug and new_slug != slug:
+                md = _rename_link(md, slug, new_slug)
+                job["permalink"] = str(md.relative_to(content_dir()).with_suffix(""))
+                _queue_write(jobs)
+                slug = new_slug
+            write_front_matter(md, fm, "")
+            changed = True
+            console.print("[green]Updated.[/green]")
+
+    if changed and not no_build:
+        run_hugo()
+    console.print("\n[green]Review complete.[/green]")
+
+
+# ===========================================================================
+# Tag maintenance
+# ===========================================================================
+
+
+@site_app.command(name="normalize-tags")
+def normalize_tags_cmd(
+    apply: bool = typer.Option(False, "--apply", help="Write changes (default is a dry-run preview)"),
+    drop_singletons: bool = typer.Option(False, "--drop-singletons", help="Also drop tags that end up used only once and are not well-known"),
+) -> None:
+    """Canonicalize tags across every link (alias map + singularize + de-hyphen).
+
+    Permalink-safe: only the `tags` field is rewritten — files are never moved,
+    renamed, or re-dated. Run with no flags to preview, then `--apply`.
+    """
+    links = list(_iter_link_files())
+    if not links:
+        console.print("[yellow]No links found.[/yellow]")
+        return
+
+    # Pass 1: build the canonical vocabulary (alias-mapped, no singularize yet)
+    # so the data-safe singularize rule knows which singular forms exist.
+    import collections
+    pre: collections.Counter = collections.Counter()
+    for _md, fm, _body in links:
+        for t in fm.get("tags") or []:
+            base = normalize_tag(t)  # alias + de-hyphen, vocab empty => no singularize
+            pre[base] += 1
+    vocab = set(pre)
+
+    # Pass 2: full normalization, count results
+    final_counts: collections.Counter = collections.Counter()
+    per_file: list[tuple] = []
+    for md, fm, body in links:
+        old = list(fm.get("tags") or [])
+        new = normalize_tag_list(old, vocab)
+        for t in new:
+            final_counts[t] += 1
+        per_file.append((md, fm, body, old, new))
+
+    # Optionally drop rare noise tags (used once, not well-known)
+    dropped: set[str] = set()
+    if drop_singletons:
+        dropped = {t for t, n in final_counts.items() if n <= 1 and t not in ALLOWED_TAGS}
+
+    changes = []
+    for md, fm, body, old, new in per_file:
+        if dropped:
+            new = [t for t in new if t not in dropped] or new  # never empty a link entirely
+        if new != old:
+            changes.append((md, fm, body, old, new))
+
+    distinct_before = len({t.lower() for _m, fm, _b in links for t in (fm.get("tags") or [])})
+    distinct_after = len([t for t in final_counts if t not in dropped])
+    console.print(f"Tags: [bold]{distinct_before}[/bold] distinct -> [bold]{distinct_after}[/bold] after normalization")
+    console.print(f"Files changed: [bold]{len(changes)}[/bold] / {len(links)}")
+    if dropped:
+        console.print(f"Dropping {len(dropped)} rare tags: [dim]{', '.join(sorted(dropped)[:30])}{'...' if len(dropped) > 30 else ''}[/dim]")
+
+    # Show a sample diff
+    shown = 0
+    for md, fm, body, old, new in changes:
+        if shown >= 25:
+            console.print(f"[dim]... and {len(changes) - shown} more[/dim]")
+            break
+        console.print(f"  [cyan]{md.relative_to(content_dir())}[/cyan]: [dim]{old}[/dim] -> [green]{new}[/green]")
+        shown += 1
+
+    if not apply:
+        console.print("\n[yellow]Dry run.[/yellow] Re-run with [bold]--apply[/bold] to write changes.")
+        return
+
+    for md, fm, body, old, new in changes:
+        if dropped:
+            new = [t for t in new if t not in dropped] or new
+        fm["tags"] = new
+        write_front_matter(md, fm, body)
+    console.print(f"\n[green]Applied to {len(changes)} files.[/green]")
+    if changes:
+        run_hugo()
+
+
+@site_app.command(name="suggest-aliases")
+def suggest_aliases_cmd() -> None:
+    """LLM-assisted: propose new TAG_ALIASES entries from the tag vocabulary.
+
+    Sends only the tag list + counts (not articles) to the LLM and prints
+    Python dict lines you can review and paste into TAG_ALIASES. Nothing is
+    written automatically — keeps the vocabulary auditable. Good monthly task.
+    """
+    import collections
+    counts: collections.Counter = collections.Counter()
+    for _md, fm, _body in _iter_link_files():
+        for t in fm.get("tags") or []:
+            counts[t.lower()] += 1
+    if not counts:
+        console.print("[yellow]No tags found.[/yellow]")
+        return
+
+    canonical = ", ".join(sorted(ALLOWED_TAGS))
+
+    # Only ask about tags that aren't already canonical or already aliased.
+    candidates = [t for t, _ in counts.most_common()
+                  if t not in ALLOWED_TAGS and t not in TAG_ALIASES]
+    if not candidates:
+        console.print("[green]Every tag is already canonical or aliased — nothing to propose.[/green]")
+        return
+
+    # This model can't disable "thinking" and returns empty content on large
+    # prompts, so we chunk: small prompts reliably yield clean content.
+    chunk_size = int(os.environ.get("SUGGEST_CHUNK_SIZE", "40"))
+    chunks = [candidates[i:i + chunk_size] for i in range(0, len(candidates), chunk_size)]
+    known = set(counts) | ALLOWED_TAGS
+    pairs: dict[str, str] = {}
+
+    def _consider(variant: str, canonical_to: str) -> None:
+        variant = variant.strip().strip("\"\'`").lower()
+        canonical_to = canonical_to.strip().strip("\"\'`.").lower()
+        if not variant or not canonical_to or variant == canonical_to:
+            return
+        if " " in variant or " " in canonical_to:
+            return
+        if variant not in known or variant in ALLOWED_TAGS or variant in TAG_ALIASES:
+            return
+        if canonical_to not in known:
+            return
+        pairs.setdefault(variant, canonical_to)
+
+    console.print(f"Clustering [bold]{len(candidates)}[/bold] tags in {len(chunks)} chunk(s) "
+                  f"of {chunk_size} (this model is slow — be patient)...\n")
+
+    for i, chunk in enumerate(chunks, 1):
+        vocab_lines = "\n".join(f"{t}: {counts[t]}" for t in chunk)
+        prompt = f"""Map each tag below to a canonical tag ONLY if it is a clear synonym,
+typo, or strict subset. Otherwise leave it out.
+
+Canonical tags: {canonical}
+
+Tags:
+{vocab_lines}
+
+Output ONLY lines of the form  variant: canonical  — one per line, nothing else."""
+        raw = _llm_chat(prompt, f"Clustering chunk {i}/{len(chunks)}...",
+                        timeout=900.0, max_tokens=8000, include_reasoning=True)
+        if not raw:
+            continue
+        for line in raw.splitlines():
+            clean = line.strip().lstrip("-*").strip().rstrip(",").strip()
+            if clean.count(":") == 1 and "`" not in clean and "->" not in clean:
+                a, b = clean.split(":", 1)
+                _consider(a, b)
+                continue
+            if "`" in line and ("merge" in line.lower() or "->" in line):
+                if re.search(r"\bskip\b", line, re.I) and not re.search(r"merge", line, re.I):
+                    continue
+                toks = re.findall(r"`([\w.+#/-]+)`", line)
+                if len(toks) >= 2:
+                    _consider(toks[0], toks[-1])
+        console.print(f"  [dim]chunk {i}/{len(chunks)}: {len(pairs)} merges so far[/dim]")
+
+    if not pairs:
+        console.print("[yellow]No alias pairs parsed.[/yellow]")
+        return
+
+    # Persist so a long run is never lost.
+    out_file = find_repo_root() / ".campfire-tag-aliases-proposed.txt"
+    lines = [f'    "{v}": "{c}",' for v, c in sorted(pairs.items(), key=lambda kv: (kv[1], kv[0]))]
+    out_file.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+    console.print(f"\n[bold]Proposed TAG_ALIASES additions[/bold] ({len(pairs)}) — also saved to "
+                  f"[cyan]{out_file.name}[/cyan]:\n")
+    for line in lines:
+        console.print(line)
+    console.print("\n[dim]Nothing was written to main.py — review carefully (some merges are "
+                  "judgment calls), paste the good ones into TAG_ALIASES, then run "
+                  "`site normalize-tags`.[/dim]")
 
 
 if __name__ == "__main__":

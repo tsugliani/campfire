@@ -34,7 +34,7 @@ campfire/
 ```
 campfire-cli
 ├── list [-w N] [-y N]                     # list links (week, year, or current)
-├── link add <url> [-u] [-d] [-f]          # add a link
+├── link add <url> [-u] [-d] [-f] [--no-build]  # add a link (--no-build skips Hugo)
 ├── link delete -p <permalink> [-f]        # delete a link
 ├── link comment <permalink> "text"        # comment on a link
 ├── link tag <permalink> [-u]              # tag/retag a link via LLM
@@ -45,10 +45,32 @@ campfire-cli
 ├── site restore <file> [-u] [-f]          # import from backup
 ├── site retag -y <year> [-w N]            # bulk retag via LLM
 ├── site redate -y <year> [-w N] [--fetch] # bulk redate from publication dates
-└── site wipe [-f]                         # DESTRUCTIVE: wipe all content
+├── site normalize-tags [--apply] [--drop-singletons]  # canonicalize tags (permalink-safe)
+├── site suggest-aliases                   # LLM proposes TAG_ALIASES entries (review-only)
+├── site wipe [-f]                         # DESTRUCTIVE: wipe all content
+├── queue add <url>...  [-d]               # enqueue links instantly (no network/build)
+├── queue list                             # show pending/done/failed jobs
+├── queue process [-w N] [-y N] [--no-build] [--retry-failed]  # fetch all + ONE rebuild
+├── queue review [--no-build]              # validate/fix processed links (title/desc/tags)
+└── queue clear [--all]                    # drop done jobs (or everything)
 ```
 
-Commands use Typer subgroups: `link_app` (single-link ops), `site_app` (site management), `app` (top-level list).
+Commands use Typer subgroups: `link_app` (single-link ops), `site_app` (site management), `queue_app` (batch queue), `app` (top-level list).
+
+## Performance notes
+
+- **Hugo rebuild is the dominant cost** of any mutation (~15s, scales with site size). `link add` rebuilds by default; use `--no-build`, or the **queue** (`queue process` rebuilds once for the whole batch) to amortize it.
+- **Batch workflow**: `queue add <url>...` (instant) → `queue process` (fetch all + one rebuild, records each result's permalink + prints a summary table) → `queue review` (step through to validate/fix title/description/tags; editing the title renames the .md + screenshot files to keep the slug in sync — safe because the batch isn't indexed yet). Screenshot latency is irrelevant here since it's all batched.
+- **`_scan_links()`** does a single cached disk walk + parse; `find_duplicate_url` and `get_existing_tags` both derive from it (no double scan per `add`).
+- **`SCREENSHOT_SETTLE_MS`** env var tunes the Playwright settle wait (default 1200ms).
+- The LLM tag call is intentionally *not* optimized for latency — it can take as long as it needs.
+
+## Tag canonicalization
+
+- **`TAG_ALIASES`** (in `main.py`, next to `ALLOWED_TAGS`) maps variants → canonical tags. It is the single place to maintain the vocabulary. Applied at write-time (via `suggest_tags_with_llm`) and in bulk by `site normalize-tags`.
+- Automatic rules in `normalize_tag`: lowercase/trim, strip hyphens/underscores/spaces, and **depluralize only when the singular already exists in the corpus** (`_NEVER_SINGULARIZE` guards proper nouns like `https`, `kubernetes`, `windows`).
+- **Permalink-safe**: `normalize-tags` rewrites *only* the `tags` field — it never moves/renames/re-dates files, so article URLs (`/{year}/w{week}/{slug}/`) are untouched. Tags are NOT part of article permalinks; they only generate `/tags/<tag>/` taxonomy pages.
+- Monthly maintenance: run `site suggest-aliases` → review → paste into `TAG_ALIASES` → `site normalize-tags --apply`. `--drop-singletons` is the aggressive option (deletes rare tags rather than remapping them).
 
 ## Key conventions
 
@@ -73,6 +95,7 @@ Commands use Typer subgroups: `link_app` (single-link ops), `site_app` (site man
 - Tags suggested via any OpenAI-compatible LLM endpoint
 - `ALLOWED_TAGS` is guidance in the prompt, not a hard filter
 - `LLM_MAX_CHARS` env var controls page content cap (default 12000, increase for larger context models)
+- `LLM_TIMEOUT` env var (seconds) overrides the request timeout. Resolution: `$LLM_TIMEOUT` if set, else the caller's `timeout` arg, else 120. `site suggest-aliases` passes 600 by default since clustering the whole vocabulary on a large local model can exceed 2 minutes.
 - Requests retry 3 times on failure, with timing and payload info on errors
 - Temperature: 0.1 for deterministic tag suggestions
 - Recommended: `qwen2.5-72b-instruct` for best accuracy, `qwen2.5-14b-instruct` for speed
