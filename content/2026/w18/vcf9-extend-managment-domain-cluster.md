@@ -3,7 +3,7 @@ title: VCF9 - Extend Managment Domain Cluster
 url_link: https://sdn-warrior.org/posts/vcf9-extende-mgmt-domain/
 tags:
 - vmware
-- vcf9
+- vcf
 - esx9
 - homelab
 description: How do you actually expand a management domain in VCF9, and what do I

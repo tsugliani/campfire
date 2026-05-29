@@ -5,7 +5,7 @@ tags:
 - proxmox
 - web
 - automation
-- deployment
+- devops
 description: J.HOMMET.NET - Humain analogue dans un monde numérique.
 date: '2025-05-31'
 year: 2025

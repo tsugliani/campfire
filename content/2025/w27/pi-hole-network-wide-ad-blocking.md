@@ -3,9 +3,8 @@ title: Pi-hole – Network-wide Ad Blocking
 url_link: https://pi-hole.net/
 tags:
 - networking
-- dns
 - adblocking
-- pi-hole
+- pihole
 description: Network-wide Ad Blocking
 date: '2025-07-03'
 year: 2025

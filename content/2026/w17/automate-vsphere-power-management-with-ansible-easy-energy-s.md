@@ -3,9 +3,8 @@ title: 'Automate vSphere Power Management with Ansible: Easy Energy Savings [202
   - James Kilby'
 url_link: https://jameskilby.co.uk/2026/04/vsphere-power-management-driven-by-ansible/
 tags:
-- ansible
-- vmware
 - automation
+- vmware
 - homelab
 description: Learn how to automate vSphere power management using Ansible and SemaphoreUI,
   scheduling ESXi host shutdowns based on Octopus Agile energy tariffs to cut costs.

@@ -2,7 +2,7 @@
 title: About | Azlux's repository
 url_link: https://packages.azlux.fr/
 tags:
-- debian
+- linux
 - opensource
 description: ''
 date: '2025-09-17'

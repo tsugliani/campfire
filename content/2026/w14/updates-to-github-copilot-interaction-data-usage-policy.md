@@ -3,7 +3,7 @@ title: Updates to GitHub Copilot interaction data usage policy
 url_link: https://github.blog/news-insights/company-news/updates-to-github-copilot-interaction-data-usage-policy/
 tags:
 - ai
-- github
+- git
 - copilot
 - data
 description: From April 24 onward, interaction data from Copilot Free, Pro, and Pro+

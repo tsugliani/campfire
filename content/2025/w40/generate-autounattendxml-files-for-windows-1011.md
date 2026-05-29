@@ -5,7 +5,7 @@ tags:
 - windows
 - xml
 - installation
-- unattended
+- devops
 description: »schneegans.de
 date: '2025-09-29'
 year: 2025

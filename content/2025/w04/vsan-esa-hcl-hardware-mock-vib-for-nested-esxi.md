@@ -5,7 +5,7 @@ tags:
 - vmware
 - vcf
 - vsan
-- nested
+- virtualization
 description: Whether you are configuring vSAN Express Storage Architecture (ESA) directly
   from vCenter Server or from VMware Cloud Foundation (VCF), the underlying ESXi hardware
   is automatically validated again…

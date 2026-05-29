@@ -4,7 +4,7 @@ url_link: https://mrlokans.work/posts/state-of-homelab-2026/
 tags:
 - homelab
 - docker
-- ansible
+- automation
 - containers
 description: 'Evolution of a self-hosting hobby: from clueless to amateur.'
 date: '2026-04-13'

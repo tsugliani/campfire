@@ -4,7 +4,7 @@ url_link: https://ekzhang.substack.com/p/ssh-hypervisor-simcity-for-vms
 tags:
 - ssh
 - virtualization
-- go
+- golang
 - firecracker
 description: Tackling a larger systems programming project with AI tools.
 date: '2025-09-28'

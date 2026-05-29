@@ -5,7 +5,6 @@ tags:
 - vmware
 - homelab
 - hardware
-- esxi
 description: Since launching the MS-01 in 2024, Minisforum has steadily gained popularity
   for its unique design that sets it apart from established players in the small form
   factor (SFF) market. Following the s…

@@ -4,7 +4,7 @@ url_link: https://wiki.philbendeck.com/Veeam/VCD_10_6_Support_VBR_12_2_2
 tags:
 - vmware
 - vcd
-- vbr
+- infrastructure
 description: ''
 date: '2025-08-17'
 year: 2025

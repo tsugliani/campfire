@@ -5,8 +5,6 @@ url_link: https://williamlam.com/2025/01/passwordless-login-to-vcenter-server-or
 tags:
 - vmware
 - security
-- webauthn
-- yubikey
 description: After spending some time playing with a couple of self-hosted Identity
   Providers solutions like Authentik and Keycloak for use with vCenter Server Identity
   Federation, I was curious about their Mul…

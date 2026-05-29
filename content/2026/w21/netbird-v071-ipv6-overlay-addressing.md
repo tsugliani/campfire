@@ -3,7 +3,6 @@ title: NetBird v0.71 - IPv6 Overlay Addressing
 url_link: https://netbird.io/knowledge-hub/ipv6-overlay-addressing
 tags:
 - networking
-- ipv6
 - overlay
 - dualstack
 description: NetBird v0.71 introduces dual-stack overlay networking. Every peer can

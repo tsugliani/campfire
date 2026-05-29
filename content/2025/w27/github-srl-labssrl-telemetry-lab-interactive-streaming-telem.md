@@ -3,7 +3,7 @@ title: 'GitHub - srl-labs/srl-telemetry-lab: Interactive Streaming Telemetry lab
   Nokia SR Linux nodes forming a Clos topology'
 url_link: https://github.com/srl-labs/srl-telemetry-lab
 tags:
-- telemetry
+- monitoring
 - containers
 - networking
 - linux

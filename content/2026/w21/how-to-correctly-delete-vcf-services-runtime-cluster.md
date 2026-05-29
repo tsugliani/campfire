@@ -4,7 +4,7 @@ url_link: https://fojta.wordpress.com/2026/05/14/how-to-correctly-delete-vmsp-cl
 tags:
 - vmware
 - vcf
-- pvc
+- storage
 - fcd
 description: When you upgrade VCF Automation to version 9.1, new VCF Services Runtime
   consumption cluster (internally called VMSP = VMware Management Services Platform)

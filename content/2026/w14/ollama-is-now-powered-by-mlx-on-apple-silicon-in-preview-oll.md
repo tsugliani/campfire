@@ -5,7 +5,6 @@ tags:
 - ai
 - macos
 - performance
-- optimization
 description: Today, we're previewing the fastest way to run Ollama on Apple silicon,
   powered by MLX, Apple's machine learning framework.
 date: '2026-03-31'

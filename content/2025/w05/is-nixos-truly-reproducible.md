@@ -2,10 +2,10 @@
 title: Is NixOS truly reproducible?
 url_link: https://luj.fr/blog/is-nixos-truly-reproducible.html
 tags:
-- nixos
+- linux
 - reproducibility
 - research
-- packages
+- package
 description: Build reproducibility is often considered as a de facto feature provided
   by functional package managers like Nix. Although the functional package manager
   model...

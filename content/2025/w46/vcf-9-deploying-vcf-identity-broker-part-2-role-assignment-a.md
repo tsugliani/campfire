@@ -4,7 +4,7 @@ url_link: https://vxworld.co.uk/2025/11/11/vcf-9-deploying-vcf-identity-broker-p
 tags:
 - vmware
 - roles
-- sso
+- security
 - validation
 description: 'Phase 3: Role AssignmentAssign the service roles in vCenterAssign the
   service roles in NSXAssign the service roles in VCF OperationsAssign the service

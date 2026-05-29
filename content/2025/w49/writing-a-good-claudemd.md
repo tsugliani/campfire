@@ -4,8 +4,7 @@ url_link: https://www.humanlayer.dev/blog/writing-a-good-claude-md
 tags:
 - development
 - ai
-- best-practices
-- claudecode
+- bestpractices
 description: '`CLAUDE.md` is a high-leverage configuration point for Claude Code.
   Learning how to write a good `CLAUDE.md` (or `AGENTS.md`) is a key skill for agent-enabled
   software engineering.'

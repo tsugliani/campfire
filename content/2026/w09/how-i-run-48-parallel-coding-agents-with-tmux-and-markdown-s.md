@@ -3,7 +3,7 @@ title: How I run 4–8 parallel coding agents with tmux and Markdown specs — M
   Schipper
 url_link: https://schipper.ai/posts/parallel-coding-agents/
 tags:
-- tmux
+- terminal
 - markdown
 - development
 - workflow

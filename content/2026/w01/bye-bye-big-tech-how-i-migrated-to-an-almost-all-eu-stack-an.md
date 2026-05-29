@@ -3,7 +3,7 @@ title: 'Bye Bye Big Tech: How I Migrated to an almost All-EU Stack (and saved 50
   per year)'
 url_link: https://www.zeitgeistofbytes.com/p/bye-bye-big-tech-how-i-migrated-to
 tags:
-- privacy
+- security
 - eu
 - cloud
 - tools

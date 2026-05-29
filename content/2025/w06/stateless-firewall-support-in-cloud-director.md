@@ -3,7 +3,7 @@ title: Stateless Firewall Support in Cloud Director
 url_link: https://fojta.wordpress.com/2025/02/05/stateless-firewall-support-in-cloud-director/
 tags:
 - vmware
-- firewall
+- security
 - nsx
 - cloud
 description: With the new Broadcom licensing changes related to NSX only the stateless

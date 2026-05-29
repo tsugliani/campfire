@@ -4,7 +4,7 @@ url_link: https://oskargroth.com/blog/reverse-engineering-nsvisualeffectview
 tags:
 - macos
 - development
-- ui
+- ux
 - customization
 description: How NSVisualEffectView renders blur effects under the hood, and building
   a custom material view from scratch using CABackdropLayer.

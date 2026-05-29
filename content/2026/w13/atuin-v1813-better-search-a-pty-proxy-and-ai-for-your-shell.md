@@ -5,7 +5,6 @@ tags:
 - ai
 - terminal
 - search
-- pty
 description: 'A new release is out! v18.13 is probably the biggest set of changes
   we have released in a good while, read on to find out more.
 

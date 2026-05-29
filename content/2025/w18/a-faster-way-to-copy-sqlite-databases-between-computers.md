@@ -2,7 +2,7 @@
 title: A faster way to copy SQLite databases between computers
 url_link: https://alexwlchan.net/2025/copying-sqlite-databases/
 tags:
-- sqlite
+- database
 - ssh
 - compression
 - rsync

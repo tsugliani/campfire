@@ -2,7 +2,7 @@
 title: Akvorado release 2.0
 url_link: https://vincent.bernat.ch/en/blog/2025-akvorado-2.0
 tags:
-- go
+- golang
 - monitoring
 - docker
 - web

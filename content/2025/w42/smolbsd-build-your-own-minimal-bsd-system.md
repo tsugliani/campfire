@@ -5,7 +5,7 @@ tags:
 - bsd
 - netbsd
 - minimal
-- sshd
+- ssh
 description: build your own minimal BSD UNIX system
 date: '2025-10-15'
 year: 2025

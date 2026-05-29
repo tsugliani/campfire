@@ -3,7 +3,6 @@ title: How I like to install NixOS (declaratively)
 url_link: https://michael.stapelberg.ch/posts/2025-06-01-nixos-installation-declarative/
 tags:
 - linux
-- nixos
 - installation
 - declarative
 description: 'For one of my network storage PC builds, I was looking for an alternative

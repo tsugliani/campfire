@@ -3,7 +3,7 @@ title: Distributing your own scripts via Homebrew
 url_link: https://justin.searls.co/posts/how-to-distribute-your-own-scripts-via-homebrew/
 tags:
 - cli
-- homebrew
+- macos
 - ruby
 - automation
 description: 'I use Homebrew all the time. Whenever I see a new CLI that offers an

@@ -2,9 +2,8 @@
 title: Welcome | authentik
 url_link: https://goauthentik.io/?ref=openalternative.co
 tags:
-- authentik
-- authentication
-- open-source
+- security
+- opensource
 - api
 description: Bring all of your authentication into a unified platform.
 date: '2025-07-03'

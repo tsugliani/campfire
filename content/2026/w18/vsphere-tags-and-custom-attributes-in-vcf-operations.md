@@ -5,7 +5,7 @@ tags:
 - vmware
 - tags
 - attributes
-- vcfoperations
+- vcfops
 description: 'We''ve discussed vSphere Tags and Custom Attributes a couple times before:
   • vSphere Tags on Clusters in Aria Operations • vSphere Cluster Custom Attributes
   in VCF OperationsBoth are very powerful, yet quite different in terms of how they

@@ -4,7 +4,6 @@ title: '[NSX Intelligence] Problème lors du déploiement de NSX Application Pla
 url_link: https://blog.mouais.net/2025/02/11/nsxi-kubeadm-config.html
 tags:
 - kubernetes
-- rancher
 - nsx
 - troubleshooting
 description: Lors d’une nouvelle installation de NSX Intelligence (ou plutôt Security

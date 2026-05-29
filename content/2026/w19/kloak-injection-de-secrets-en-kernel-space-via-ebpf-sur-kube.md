@@ -3,7 +3,7 @@ title: 'Kloak : injection de secrets en kernel-space via eBPF sur Kubernetes'
 url_link: https://une-tasse-de.cafe/blog/kloak/
 tags:
 - kubernetes
-- ebpf
+- monitoring
 - security
 - secrets
 description: Comment Kloak intercepte le trafic TLS de vos pods au niveau kernel avec

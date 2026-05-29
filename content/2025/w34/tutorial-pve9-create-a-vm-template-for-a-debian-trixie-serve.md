@@ -4,7 +4,7 @@ url_link: https://forum.proxmox.com/threads/pve9-create-a-vm-template-for-a-debi
 tags:
 - vmware
 - cloud
-- debian
+- linux
 - template
 description: 'Just wanted to share my (successful) procedure for creating in PVE9
   a VM Template for a Debian Trixie Server with Cloud-Init, which I have done in the

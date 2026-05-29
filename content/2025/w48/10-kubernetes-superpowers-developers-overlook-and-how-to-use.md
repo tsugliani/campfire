@@ -4,7 +4,7 @@ url_link: https://oneuptime.com/blog/post/2025-11-27-ten-kubernetes-superpowers-
 tags:
 - kubernetes
 - devops
-- observability
+- monitoring
 - automation
 description: ' Ten field-tested Kubernetes capabilities - topology spread, disruption
   budgets, admission policies, autoscaling guardrails, and more - that most teams

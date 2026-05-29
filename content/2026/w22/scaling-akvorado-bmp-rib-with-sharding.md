@@ -2,7 +2,7 @@
 title: Scaling Akvorado BMP RIB with sharding
 url_link: https://vincent.bernat.ch/en/blog/2026-akvorado-rib-sharding
 tags:
-- network
+- networking
 - golang
 - performance
 - sharding

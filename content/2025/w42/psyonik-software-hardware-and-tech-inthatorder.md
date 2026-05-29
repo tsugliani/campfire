@@ -4,7 +4,7 @@ url_link: https://psyonik.tech/posts/a-guide-for-wireguard-vpn-setup-with-pi-hol
 tags:
 - ssh
 - wireguard
-- vps
+- cloud
 - linux
 description: 'I’ve usedMullvadas my VPN provider for a few years. Their service is
   good, they provide keys for 5 devices, rely on the Wireguard protocol, and offer

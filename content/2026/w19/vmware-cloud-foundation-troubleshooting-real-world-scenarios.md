@@ -5,7 +5,7 @@ url_link: https://www.ntpro.nl/blog/archives/3866-VMware-Cloud-Foundation-Troubl
 tags:
 - vmware
 - troubleshooting
-- operations
+- devops
 - certification
 description: After delivering this session at both VMUG Connect Amsterdam and VMUG
   Connect Minneapolis, I can honestly say the response exceeded my expectations. The

@@ -5,7 +5,6 @@ tags:
 - linux
 - security
 - python
-- exploit
 description: CVE-2026-31431. 100% Reliable Linux LPE — no race, no per-distro offsets,
   page-cache write that bypasses on-disk file-integrity tools and crosses containers.
   Found by Xint Code.

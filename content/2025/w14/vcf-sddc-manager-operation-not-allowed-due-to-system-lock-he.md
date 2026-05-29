@@ -5,7 +5,7 @@ url_link: https://davidring.ie/2025/03/31/vcf-sddc-manager-operation-not-allowed
 tags:
 - vmware
 - ssh
-- psql
+- database
 description: SDDC Manager oprations may not be allowed due to System Lock held by
   Password Manager operation in progress. A password rotation task may have failed
   on individual components for various reasons. S…

@@ -6,7 +6,6 @@ tags:
 - ai
 - hardware
 - performance
-- optimization
 description: 'Disaggregating Prefill and Decode: Faster First Tokens, Faster Streams'
 date: '2025-10-17'
 year: 2025

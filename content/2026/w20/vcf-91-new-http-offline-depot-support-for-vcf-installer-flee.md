@@ -4,7 +4,7 @@ url_link: https://williamlam.com/2026/05/vcf-9-1-new-http-offline-depot-support-
 tags:
 - vmware
 - api
-- http
+- networking
 - offline
 description: VMware vSphere Foundation (VVF) and VMware Cloud Foundation (VCF) 9.0
   introduced the concept of a unified VCF Software Depot, which can connect to either

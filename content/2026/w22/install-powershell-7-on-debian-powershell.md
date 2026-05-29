@@ -2,7 +2,7 @@
 title: Install PowerShell 7 on Debian - PowerShell
 url_link: https://learn.microsoft.com/en-us/powershell/scripting/install/install-debian
 tags:
-- powershell
+- windows
 - linux
 description: How to install PowerShell on Debian Linux
 date: '2026-05-27'

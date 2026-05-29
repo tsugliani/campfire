@@ -4,7 +4,6 @@ url_link: https://github.com/janosmiko/lfk
 tags:
 - kubernetes
 - terminal
-- tui
 - golang
 description: ⚡ LFK is a lightning-fast, keyboard-focused, yazi-inspired terminal user
   interface for navigating and managing Kubernetes clusters. Built for speed and efficiency,

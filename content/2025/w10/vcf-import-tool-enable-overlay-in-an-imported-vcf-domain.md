@@ -5,7 +5,7 @@ tags:
 - vmware
 - vcf
 - homelab
-- nfs
+- storage
 description: Part 2 VCF Import Cluster with NFS and activating the overlay.
 date: '2025-03-05'
 year: 2025

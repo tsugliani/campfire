@@ -4,7 +4,7 @@ url_link: https://www.hollandtech.net/claude-is-not-your-architect/
 tags:
 - ai
 - architecture
-- engineering-culture
+- engineeringculture
 - leadership
 description: Somewhere between 'ask Claude for a quick opinion' and 'Claude is writing
   our Jira tickets,' we lost the plot. AI agents are brilliant implementers. They're

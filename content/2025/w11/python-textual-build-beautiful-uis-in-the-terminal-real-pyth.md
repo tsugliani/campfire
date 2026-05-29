@@ -4,8 +4,8 @@ url_link: https://realpython.com/python-textual/
 tags:
 - python
 - terminal
-- ui
-- text-based
+- ux
+- textbased
 description: Textual is a Python library for building text-based user interfaces (TUIs)
   that support rich text, advanced layouts, and event-driven interactivity in the
   terminal. This tutorial showcases some of the ways you can design an appealing and

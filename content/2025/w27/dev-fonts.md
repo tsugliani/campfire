@@ -3,7 +3,7 @@ title: Dev Fonts
 url_link: https://devfonts.gafi.dev/
 tags:
 - web
-- fonts
+- ux
 description: 'List of the best coding fonts with live preview & themes 😍 https://devfonts.gafi.dev/
 
   by @imGaafar'

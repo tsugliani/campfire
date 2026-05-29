@@ -3,8 +3,7 @@ title: 'MS-A2 VCF 9.0 Lab: Configuring External IdP for Multiple VCF Automation
 url_link: https://williamlam.com/2025/08/ms-a2-vcf-9-0-lab-configuring-external-idp-for-multiple-vcf-automation-organizations.html
 tags:
 - vmware
-- keycloak
-- oidc
+- security
 - vcf
 description: This post is part of a short series that builds on our minimal VMware
   Cloud Foundation (VCF) 9.0 deployment (2x Minisforum MS-A2) and showcases how to

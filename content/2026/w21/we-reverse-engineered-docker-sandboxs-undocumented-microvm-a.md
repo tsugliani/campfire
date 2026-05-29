@@ -3,7 +3,7 @@ title: We Reverse-Engineered Docker Sandbox's Undocumented MicroVM API - Rivet
 url_link: https://rivet.dev/blog/2026-02-04-we-reverse-engineered-docker-sandbox-undocumented-microvm-api/
 tags:
 - docker
-- microvm
+- virtualization
 - api
 - sandbox
 description: Docker ships with an undocumented API for spawning isolated microVMs.

@@ -5,7 +5,7 @@ tags:
 - ai
 - development
 - javascript
-- openource
+- opensource
 description: Bun has been acquired by Anthropic. Anthropic is betting on Bun as the
   infrastructure powering Claude Code, Claude Agent SDK, and future AI coding products
   & tools.

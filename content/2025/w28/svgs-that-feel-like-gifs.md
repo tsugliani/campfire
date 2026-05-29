@@ -5,7 +5,7 @@ tags:
 - web
 - cli
 - svg
-- animation
+- ux
 description: The moving image below is only 49Kb and has an incredibly high resolution.
   It's similar to a GIF but instead of showing moving images, it shows moving SVGs!
 date: '2025-07-10'

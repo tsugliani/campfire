@@ -4,7 +4,7 @@ title: 'GitHub - Flyclops/tailscale-cli-gui: GUI for the CLI version of Tailscal
 url_link: https://github.com/Flyclops/tailscale-cli-gui
 tags:
 - macos
-- gui
+- desktop
 - tailscale
 - cli
 description: GUI for the CLI version of Tailscale for macOS. Contribute to Flyclops/tailscale-cli-gui

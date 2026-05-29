@@ -3,9 +3,9 @@ title: 'Building Burstables: cpu slicing with cgroups'
 url_link: https://www.ubicloud.com/blog/building-burstables-cpu-slicing-with-cgroups
 tags:
 - linux
-- cgroups
+- cgroup
 - vm
-- cpu
+- hardware
 description: Burstable VMs run on a fraction of CPU and burst to a higher level of
   CPU usage to support occasional usage spikes. To implement them, we leveraged Control
   Groups v2 (cgroups v2), a Linux kernel feature that helps manage resource usage.

@@ -3,7 +3,7 @@ title: How to use UUIDv7 in Python, Django and PostgreSQL
 url_link: https://www.paulox.net//2025/11/14/how-to-use-uuidv7-in-python-django-and-postgresql/
 tags:
 - python
-- postgresql
+- database
 - django
 - uuidv7
 description: Learn how to use UUIDv7 today with stable releases of Python 3.14, Django

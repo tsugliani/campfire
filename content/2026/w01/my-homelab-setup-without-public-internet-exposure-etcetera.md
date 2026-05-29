@@ -4,8 +4,8 @@ url_link: https://giuliomagnifico.blog/post/2026-01-02-homelab-stack-lan/
 tags:
 - homelab
 - wireguard
-- dns
-- privacy
+- networking
+- security
 description: This post explains how I operate my homelab with no public WAN exposure,
   using WireGuard to stay permanently connected to my home network from all my devices,
   …

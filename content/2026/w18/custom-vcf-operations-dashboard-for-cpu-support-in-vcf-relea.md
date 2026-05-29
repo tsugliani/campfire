@@ -5,7 +5,7 @@ tags:
 - vmware
 - automation
 - monitoring
-- cpu
+- hardware
 description: To track CPU Support in VCF releases, we have a dedicated KB article
   that shows which CPU are either Deprecated or Discontinued. See CPU Support Deprecation
   and Discontinuation In VCF Releases &#82…

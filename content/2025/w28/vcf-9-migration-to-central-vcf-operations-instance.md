@@ -4,7 +4,7 @@ url_link: https://sdn-warrior.org/posts/vcf-operations-migration/
 tags:
 - vmware
 - vcf
-- operations
+- devops
 - homelab
 description: A brief guide on how to switch from a VCF9 Operations instance to a central
   VCF Operations instance.

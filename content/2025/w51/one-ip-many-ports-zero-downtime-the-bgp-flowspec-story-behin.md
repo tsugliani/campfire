@@ -3,8 +3,6 @@ title: 'One IP, Many Ports, Zero Downtime: The BGP Flowspec Story Behind Our Mig
 url_link: https://www.linkedin.com/pulse/one-ip-many-ports-zero-downtime-bgp-flowspec-story-our-hildenbrand-wxlhe/
 tags:
 - networking
-- bgp
-- flowspec
 - migration
 description: 'The Challenge: When Granularity Is Your Only Option We were dealing
   with a legacy "beast" of a platform: a critical and systemic service running on

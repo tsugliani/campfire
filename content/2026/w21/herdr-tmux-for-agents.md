@@ -5,7 +5,6 @@ tags:
 - terminal
 - ssh
 - agents
-- multiplexer
 description: Persistent terminal multiplexer for coding agents. Detach, reattach,
   agents keep running.
 date: '2026-05-17'

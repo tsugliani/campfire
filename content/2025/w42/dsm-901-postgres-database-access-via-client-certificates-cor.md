@@ -4,8 +4,6 @@ url_link: https://cormachogan.com/2025/10/13/dsm-9-0-1-postgres-database-access-
 tags:
 - database
 - security
-- certificates
-- postgres
 description: How to access to a DSM provisioned Postgres database using User or Client
   Certificates
 date: '2025-10-13'

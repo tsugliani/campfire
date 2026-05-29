@@ -4,7 +4,7 @@ url_link: https://www.talos.dev/v1.11/learn-more/image-factory/
 tags:
 - image
 - factory
-- talos
+- kubernetes
 - linux
 description: Image Factory generates customized Talos Linux images based on configured
   schematics.

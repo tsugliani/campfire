@@ -3,7 +3,7 @@ title: Scripts I wrote that I use all the time
 url_link: https://evanhahn.com/scripts-i-wrote-that-i-use-all-the-time/
 tags:
 - shell
-- scripts
+- script
 - cli
 - automation
 description: I've written a number of little scripts over the years, many of which

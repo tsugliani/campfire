@@ -4,8 +4,6 @@ url_link: https://blog.rastrian.dev/post/beyond-the-nat-cgnat-bandwidth-and-prac
 tags:
 - networking
 - tunneling
-- bandwidth
-- cgnat
 description: Home internet in the 90s felt simple. You plugged into [Ethernet](https://en.wikipedia.org/wiki/Ethernet),
   got an [IPv4](https://en.wikipedia.org/wiki/IPv4) address, and you could expose
   a service dir...

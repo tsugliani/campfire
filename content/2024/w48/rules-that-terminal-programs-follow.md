@@ -5,7 +5,6 @@ tags:
 - terminal
 - devops
 - cli
-- terminal
 - ux
 description: '"Rules" that terminal programs follow'
 date: '2024-11-26'
@@ -13,6 +12,3 @@ year: 2024
 week: 48
 comments: []
 ---
-
-
-

@@ -4,8 +4,7 @@ url_link: https://www.nutanix.com/tech-center/blog/how-nutanix-ahv-uses-ebpf-for
 tags:
 - networking
 - virtualization
-- ebpf
-- hypervisors
+- monitoring
 description: Accurate vNIC-to-IP mapping is fundamental for virtual networking visibility,
   security, and troubleshooting. On the Nutanix AHV hypervisor, this mapping becomes
   especially important for services like Flow Virtual Networking, microsegmentation,...

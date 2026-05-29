@@ -4,8 +4,8 @@ title: 'GitHub - idursun/jjui: jjui is a TUI designed for interacting with the J
 url_link: https://github.com/idursun/jjui
 tags:
 - golang
-- tui
-- jj
+- terminal
+- git
 - bubbletea
 description: jjui is a TUI designed for interacting with the Jujutsu version control
   system. - idursun/jjui

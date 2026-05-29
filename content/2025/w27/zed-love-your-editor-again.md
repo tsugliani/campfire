@@ -2,7 +2,7 @@
 title: Zed — Love your editor again
 url_link: https://zed.dev/
 tags:
-- editor
+- development
 - rust
 - ai
 - collaboration

@@ -3,7 +3,6 @@ title: Home | Dozzle
 url_link: https://dozzle.dev/
 tags:
 - docker
-- logging
 - monitoring
 - web
 description: A lightweight, open-source, and secure log viewer for Docker.

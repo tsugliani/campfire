@@ -5,7 +5,6 @@ tags:
 - rust
 - performance
 - development
-- benchmarking
 description: An introduction to the jsongrep tool, a technical explanation of its
   DFA-based search engine, and performance results against popular JSON query tools.
 date: '2026-03-27'

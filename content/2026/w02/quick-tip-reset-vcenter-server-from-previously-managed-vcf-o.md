@@ -5,8 +5,8 @@ url_link: https://williamlam.com/2026/01/quick-tip-reset-vcenter-server-from-pre
 tags:
 - vmware
 - vcf
-- sso
-- operations
+- security
+- devops
 description: Over the holidays, I was testing some new VMware Cloud Foundation (VCF)
   upgrade flows in my lab environment, where I ended up bricking SDDC Manager, which
   was completely my fault! While I had backu…

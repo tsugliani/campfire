@@ -4,7 +4,7 @@ title: 'VMware Cloud Foundation Edge 9.0: Two-Host Edge Site Deployment with Bro
 url_link: https://blogs.vmware.com/cloud-foundation/2026/04/07/vcf-edge-brownfield-import-two-host-deployment/
 tags:
 - vmware
-- edge
+- networking
 - brownfield
 - import
 description: Learn how to deploy a 2-host VCF Edge 9.0 site with brownfield import.

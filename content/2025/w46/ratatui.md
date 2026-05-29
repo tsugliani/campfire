@@ -3,7 +3,6 @@ title: Ratatui
 url_link: https://ratatui.rs/
 tags:
 - rust
-- tui
 - terminal
 - development
 description: 'Ratatui: Cook up delicious terminal user interfaces in Rust - the fast

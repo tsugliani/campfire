@@ -3,7 +3,7 @@ title: Away from Gmail | etcetera
 url_link: https://giuliomagnifico.blog/post/2025-08-18-leaving-gmail/
 tags:
 - email
-- privacy
+- security
 - migration
 - mailboxorg
 description: 'This was a tough decision, having used Gmail since 2007/2008. However,

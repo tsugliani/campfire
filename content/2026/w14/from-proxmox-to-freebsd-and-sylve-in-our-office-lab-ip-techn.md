@@ -2,7 +2,7 @@
 title: From Proxmox to FreeBSD and Sylve in Our Office Lab | IP Technics | Dubai
 url_link: https://www.iptechnics.com/blogs/from-proxmox-to-freebsd-and-sylve-in-our-office-lab
 tags:
-- freebsd
+- linux
 - sylve
 - infrastructure
 - virtualization

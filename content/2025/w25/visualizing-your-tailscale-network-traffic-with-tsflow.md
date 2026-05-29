@@ -5,7 +5,7 @@ tags:
 - networking
 - security
 - visualization
-- logs
+- monitoring
 description: Securely connect to anything on the internet with Tailscale. Built on
   WireGuard®️, Tailscale enables you to make finely configurable connections, secured
   end-to-end according to zero trust principles, between any resources on any infrastructure.

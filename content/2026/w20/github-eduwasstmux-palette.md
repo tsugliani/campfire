@@ -2,7 +2,7 @@
 title: GitHub - eduwass/tmux-palette
 url_link: https://github.com/eduwass/tmux-palette
 tags:
-- tmux
+- terminal
 - cli
 - development
 - customization

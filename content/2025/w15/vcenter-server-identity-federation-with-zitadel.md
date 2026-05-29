@@ -3,8 +3,7 @@ title: vCenter Server Identity Federation with Zitadel
 url_link: https://williamlam.com/2025/04/vcenter-server-identity-federation-with-zitadel.html
 tags:
 - vmware
-- zitadel
-- identity
+- security
 - provider
 description: Not sure when it happened, but I have been binging self-hosted identity
   providers like Netflix shows, this season features Authentik, KeyCloak, Synology

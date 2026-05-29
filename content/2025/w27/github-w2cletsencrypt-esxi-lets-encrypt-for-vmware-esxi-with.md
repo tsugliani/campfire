@@ -4,8 +4,7 @@ title: 'GitHub - w2c/letsencrypt-esxi: Let''s Encrypt for VMware ESXi with easy 
 url_link: https://github.com/w2c/letsencrypt-esxi
 tags:
 - vmware
-- letsencrypt
-- esxi
+- security
 - automation
 description: Let's Encrypt for VMware ESXi with easy installation using pre-built
   VIB or offline bundle. Auto-renewal of certificates. - w2c/letsencrypt-esxi

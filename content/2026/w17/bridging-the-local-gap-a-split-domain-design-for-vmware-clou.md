@@ -4,7 +4,7 @@ title: 'Bridging the (.Local) Gap: A Split-Domain Design for VMware Cloud Founda
 url_link: https://blogs.vmware.com/cloud-foundation/2026/04/17/bridging-the-local-gap-a-split-domain-design-for-vmware-cloud-foundation-deployment/
 tags:
 - vmware
-- dns
+- networking
 - cloud
 - infrastructure
 description: In the ever-evolving landscape of private cloud, technical debt often

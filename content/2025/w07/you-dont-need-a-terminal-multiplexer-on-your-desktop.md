@@ -5,7 +5,6 @@ tags:
 - terminal
 - desktop
 - linux
-- tmux
 description: An opinion on the trend of content creators promoting Tmux and Zellij
   for desktop environments – and why these setups may miss the point.
 date: '2025-02-12'

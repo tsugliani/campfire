@@ -4,7 +4,7 @@ url_link: https://tailscale.com/blog/wake-on-lan-tailscale-upsnap
 tags:
 - wol
 - tailscale
-- raspberry
+- homelab
 - pi
 description: Setting up a Wake-on-LAN server you can reach from a browser, using Tailscale,
   a webapp, and a little Raspberry Pi.

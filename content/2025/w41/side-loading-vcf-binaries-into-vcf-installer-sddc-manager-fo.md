@@ -6,7 +6,6 @@ tags:
 - vmware
 - airgapped
 - vcf
-- sddcmanager
 description: The VMware Cloud Foundation (VCF) Installer (Day 0) and SDDC Manager
   (Day N) supports two common methods for downloading VCF software into a users environment.
   Connect to Broadcom's online depot (s…

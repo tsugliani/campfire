@@ -4,7 +4,7 @@ url_link: https://www.brockpeterson.com/post/vcf-operations-9-log-assist
 tags:
 - vmware
 - support
-- logs
+- monitoring
 - transfer
 description: In VCF Operations 9 we introduced a feature called Log Assist which allows
   you to upload Support Bundles to Broadcom Support from VCF Operations itself.  Here's

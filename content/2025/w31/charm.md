@@ -4,7 +4,7 @@ url_link: https://charm.land/
 tags:
 - terminal
 - ai
-- openource
+- opensource
 - cli
 description: We make the command line glamorous
 date: '2025-08-02'

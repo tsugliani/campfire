@@ -3,14 +3,13 @@ title: Why You Need 3 Nodes // My Proxmox Ceph Cluster Project!
 url_link: https://www.youtube.com/watch?v=KPx7a5MTBig
 tags:
 - proxmox
-- ceph
-- cluster
 - storage
-description: "In this video, I upgrade my old 2-node Proxmox cluster into a proper 3-node Proxmox\
-  \ cluster with Ceph storage. I’ll show why the old QDevice setup was useful for\
-  \ learning, where it started to fall apart for real high availability, and how Ceph\
-  \ changes the way VM storage works in a Proxmox cluster. We’ll go through the Ceph\
-  \ installation, monitors, managers, OSDs, RBD storage, pool settings, placement\
+- cluster
+description: "In this video, I upgrade my old 2-node Proxmox cluster into a proper\
+  \ 3-node Proxmox cluster with Ceph storage. I’ll show why the old QDevice setup\
+  \ was useful for learning, where it started to fall apart for real high availability,\
+  \ and how Ceph changes the way VM storage works in a Proxmox cluster. We’ll go through\
+  \ the Ceph installation, monitors, managers, OSDs, RBD storage, pool settings, placement\
   \ groups, and finally a live migration test to see if the VM can move between nodes\
   \ while staying online.\n\n\nReferences:\nWrite-Up: https://christianlempa.de/videos/prox...\n\
   Proxmox 2-Node Cluster Video:    • More POWER for my HomeLab! // Proxmox  \n\n________________\n\

@@ -4,7 +4,7 @@ url_link: https://nixery.dev/
 tags:
 - containers
 - docker
-- nix
+- linux
 - registry
 description: The Virus Lounge
 date: '2025-07-03'

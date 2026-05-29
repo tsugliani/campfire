@@ -4,7 +4,6 @@ url_link: https://www.jackpearce.co.uk/posts/starlink-failover/#ipv6-configurati
 tags:
 - networking
 - homelab
-- ipv6
 - starlink
 description: I recently picked up a Starlink Mini to use as a backup connection for
   my home network. The underlying technology is fascinating - thousands of satellites

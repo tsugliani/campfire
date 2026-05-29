@@ -3,7 +3,7 @@ title: Kubetail | Kubernetes logging dashboard
 url_link: https://www.kubetail.com/
 tags:
 - kubernetes
-- logging
+- monitoring
 - terminal
 - web
 description: Kubetail is a real-time logging dashboard for Kubernetes. View container

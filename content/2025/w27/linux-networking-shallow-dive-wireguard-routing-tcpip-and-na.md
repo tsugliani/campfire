@@ -6,7 +6,6 @@ tags:
 - linux
 - networking
 - wireguard
-- routing
 description: This year I decided to refactor my personal cloud infrastructure. Because
   of various nuances in m...
 date: '2025-07-03'

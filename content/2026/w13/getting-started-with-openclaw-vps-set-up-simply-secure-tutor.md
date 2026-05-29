@@ -4,7 +4,7 @@ url_link: https://www.youtube.com/watch?v=lmZqacVbzHY
 tags:
 - ai
 - docker
-- vps
+- cloud
 - security
 description: "Get started with Hostinger VPS: https://hostinger.com/LEMPA10 — use\
   \ code LEMPA10 for 10% off\n\nIn this video I test OpenClaw — the open-source, self-hosted\

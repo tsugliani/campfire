@@ -4,7 +4,7 @@ title: Help! I Joined the Wrong Identity Broker… (How to Unjoin an Identity Br
 url_link: https://vrealize.it/2025/09/15/help-i-joined-the-wrong-identity-broker-how-to-unjoin-an-identity-broker-in-vcf-9/
 tags:
 - vmware
-- identity
+- security
 - broker
 - unjoin
 description: 'So, you proudly wired up your VCF 9 environment to an Identity Broker,

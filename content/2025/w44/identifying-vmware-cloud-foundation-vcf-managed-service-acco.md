@@ -5,7 +5,6 @@ url_link: https://williamlam.com/2025/10/identifying-vmware-cloud-foundation-vcf
 tags:
 - vmware
 - vcf
-- vcenter
 - serviceaccounts
 description: When users log in to a vCenter Server to manage roles and permissions
   within a VMware Cloud Foundation (VCF) 9.0 environment, they may notice several

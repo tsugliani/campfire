@@ -4,7 +4,7 @@ title: 'GitHub - juanfont/headscale: An open source, self-hosted implementation 
 url_link: https://github.com/juanfont/headscale
 tags:
 - opensource
-- selfhosted
+- homelab
 - golang
 - tailscale
 description: An open source, self-hosted implementation of the Tailscale control server

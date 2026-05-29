@@ -4,7 +4,7 @@ url_link: https://www.ssp.sh/blog/obsidian-note-taking-workflow/
 tags:
 - obsidian
 - markdown
-- vim
+- development
 - pkm
 description: A Vim-Inspired Approach to Efficient Note Management with Obsidian and
   Markdown

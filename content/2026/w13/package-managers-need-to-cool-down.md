@@ -5,7 +5,7 @@ tags:
 - package
 - security
 - ecosystems
-- deep-dive
+- deepdive
 description: A survey of dependency cooldown support across package managers and update
   tools.
 date: '2026-03-25'

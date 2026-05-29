@@ -5,7 +5,7 @@ tags:
 - vmware
 - recovery
 - disaster
-- backup
+- infrastructure
 description: Protection & more importantly, recovery of VMware Cloud Foundation (VCF)
   is something I and Ken Gould have worked closely on for a number of years now. Whether
   it was a VVD based deployment or …

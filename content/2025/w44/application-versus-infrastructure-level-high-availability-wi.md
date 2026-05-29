@@ -6,7 +6,7 @@ tags:
 - vmware
 - vcf
 - vsan
-- highavailability
+- infrastructure
 description: Maintaining availability of data and the applications that produce or
   consume that data might be the most important responsibility of data center administrators.
   Capabilities like high performance or special data services mean very little if

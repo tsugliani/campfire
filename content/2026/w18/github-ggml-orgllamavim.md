@@ -2,10 +2,9 @@
 title: 'GitHub - ggml-org/llama.vim:'
 url_link: https://github.com/ggml-org/llama.vim
 tags:
-- vim
-- llm
+- development
+- ai
 - copilot
-- developer-tool
 description: Vim plugin for LLM-assisted code/text completion. Contribute to ggml-org/llama.vim
   development by creating an account on GitHub.
 date: '2026-04-28'

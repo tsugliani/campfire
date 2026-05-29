@@ -2,7 +2,7 @@
 title: I finally understand Cloudflare Zero Trust tunnels
 url_link: https://david.coffee/cloudflare-zero-trust-tunnels
 tags:
-- cloudflare
+- cloud
 - zero
 - trust
 - tunnels

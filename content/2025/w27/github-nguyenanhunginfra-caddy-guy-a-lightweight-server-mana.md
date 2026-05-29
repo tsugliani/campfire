@@ -5,9 +5,8 @@ title: 'GitHub - nguyenanhung/infra-caddy-guy: A lightweight Server management s
 url_link: https://github.com/nguyenanhung/infra-caddy-guy
 tags:
 - docker
-- caddy
+- web
 - infrastructure
-- webserver
 description: A lightweight Server management script set, backend is Docker, Caddy
   Web Server. Makes the life of the infra guy a little simpler and easier. - nguyenanhung/infra-caddy-guy
 date: '2025-07-03'

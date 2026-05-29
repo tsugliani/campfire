@@ -5,7 +5,7 @@ tags:
 - security
 - web
 - policy
-- editor
+- development
 description: The visual policy editor gives you a tabular view of each section of
   your policy file, and allows you to add, edit, and delete individual policy entries
   using visual forms.

@@ -5,7 +5,6 @@ tags:
 - cloud
 - performance
 - web
-- optimization
 description: 'Cloudflare investigated CPU performance benchmark results for Workers,
   uncovering and fixing issues in infrastructure, V8 garbage collection, and OpenNext
   optimizations. These improvements have made Cloudflare Workers faster for all customers.

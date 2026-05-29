@@ -4,7 +4,7 @@ url_link: https://www.youtube.com/watch?v=-QFHIoCo-Ko
 tags:
 - ai
 - development
-- tdd
+- testing
 - workflow
 description: 'A hands-on workshop covering the full lifecycle of AI-assisted development,
   from turning ambiguous requirements into agent-ready plans to running autonomous

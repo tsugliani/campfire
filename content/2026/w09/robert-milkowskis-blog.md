@@ -3,7 +3,7 @@ title: Robert Milkowski's blog
 url_link: https://milek.blogspot.com/
 tags:
 - linux
-- bpftrace
+- monitoring
 - api
 - cli
 description: ''

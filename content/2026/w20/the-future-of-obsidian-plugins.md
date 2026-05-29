@@ -2,8 +2,8 @@
 title: The future of Obsidian plugins
 url_link: https://obsidian.md/blog/future-of-plugins/
 tags:
-- plugins
-- community
+- plugin
+- opensource
 - development
 - dashboard
 description: Introducing the new Obsidian Community site and developer dashboard.

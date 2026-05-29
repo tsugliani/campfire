@@ -2,7 +2,6 @@
 title: Instant database clones with PostgreSQL 18
 url_link: https://boringsql.com/posts/instant-database-clones/
 tags:
-- postgresql
 - database
 - performance
 - cloning

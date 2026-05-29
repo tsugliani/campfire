@@ -2,7 +2,7 @@
 title: GitHub issues for notes
 url_link: https://simonwillison.net/2025/May/26/notes/
 tags:
-- github
+- git
 - api
 - markdown
 - automation

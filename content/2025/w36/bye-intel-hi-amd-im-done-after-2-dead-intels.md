@@ -4,8 +4,6 @@ url_link: https://michael.stapelberg.ch/posts/2025-09-07-bye-intel-hi-amd-9950x3
 tags:
 - hardware
 - linux
-- cpu
-- amd
 description: 'The Intel 285K CPU in my high-end 2025 Linux PC died again! 😡 Notably,
   this was the replacement CPU for the original 285K that died in March, and after
   reading through the reviews of Intel CPUs on my electronics store of choice, many

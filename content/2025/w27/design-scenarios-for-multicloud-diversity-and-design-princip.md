@@ -4,8 +4,6 @@ url_link: https://www.megaport.com/blog/design-scenarios-for-multicloud/
 tags:
 - networking
 - cloud
-- multicloud
-- connectivity
 description: Discover how to design tailored multicloud connectivity scenarios with
   Megaport and Megaport Cloud Router (MCR). From physical layer configurations to
   cloud-specific connectivity options, explore resilient and scalable architectures

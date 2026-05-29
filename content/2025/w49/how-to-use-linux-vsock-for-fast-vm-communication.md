@@ -4,7 +4,7 @@ url_link: https://popovicu.com/posts/how-to-use-linux-vsock-for-fast-vm-communic
 tags:
 - linux
 - vsock
-- grpc
+- api
 - c++
 description: Discover how to bypass the network stack for Host-to-VM communication
   using Linux Virtual Sockets (AF_VSOCK). This article details how to use these sockets

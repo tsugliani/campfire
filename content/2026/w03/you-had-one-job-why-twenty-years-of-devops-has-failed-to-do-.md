@@ -3,7 +3,7 @@ title: '“You Had One Job”: Why Twenty Years of DevOps Has Failed to Do it'
 url_link: https://www.honeycomb.io/blog/you-had-one-job-why-twenty-years-of-devops-has-failed-to-do-it
 tags:
 - devops
-- observability
+- monitoring
 - ai
 - feedback
 description: Let’s start with a question.  What is DevOps all about?

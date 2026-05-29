@@ -2,7 +2,7 @@
 title: 'Instant VMs and LXCs on Proxmox: My Go-To Terraform Templates for Quick Deployments'
 url_link: https://www.virtualizationhowto.com/2025/08/instant-vms-and-lxcs-on-proxmox-my-go-to-terraform-templates-for-quick-deployments/
 tags:
-- terraform
+- infrastructure
 - proxmox
 - virtualization
 - automation

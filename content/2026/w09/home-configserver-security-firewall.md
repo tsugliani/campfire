@@ -3,7 +3,6 @@ title: Home - ConfigServer Security & Firewall
 url_link: https://aetherinox.github.io/csf-firewall/home/
 tags:
 - security
-- firewall
 - linux
 - server
 description: ''

@@ -2,8 +2,7 @@
 title: 'My Own DNS Server At Home - Part 1: IPv4'
 url_link: https://jan.wildeboer.net/2025/08/My-DNS-Part-1/
 tags:
-- dns
-- ipv4
+- networking
 - homelab
 - bind
 description: “It’s always DNS” is a famous meme among network people. Name resolution

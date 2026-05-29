@@ -2,7 +2,7 @@
 title: Litestream - Streaming SQLite Replication
 url_link: https://litestream.io/
 tags:
-- sqlite
+- database
 - replication
 - opensource
 - cloud

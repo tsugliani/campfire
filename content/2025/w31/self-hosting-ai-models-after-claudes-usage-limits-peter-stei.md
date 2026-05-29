@@ -5,7 +5,7 @@ tags:
 - ai
 - cloud
 - hardware
-- self-hosting
+- homelab
 description: After Claude Pro changed to weekly limits, I explored self-hosting Qwen3-Coder-480B
   with 400k context windows. Here's what I learned about costs, alternatives, and
   why Claude Code still dominates the landscape.

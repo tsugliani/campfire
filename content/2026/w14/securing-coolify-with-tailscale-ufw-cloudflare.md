@@ -5,7 +5,7 @@ tags:
 - security
 - linux
 - networking
-- cloudflare
+- cloud
 description: I run Coolify on a Hetzner bare metal server to host multiple web apps
   I have built and the services I use to maintain them. Of course almost none of my
   sites have any users, but I enjoy the process, and that is not here or there (but

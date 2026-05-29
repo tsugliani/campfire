@@ -5,7 +5,6 @@ tags:
 - vmware
 - networking
 - vpc
-- connectivity
 description: 'Related VCF Networking 9.1 Posts: VMware Cloud Foundation (VCF) provides
   a robust suite of self-service networking capabilities (as covered in our previous
   post: [Link to: VCF 9.1 – Network Services]) In this blog, we zoom in on a powerful

@@ -5,7 +5,7 @@ url_link: https://blog.cloudflare.com/emdash-wordpress/
 tags:
 - web
 - security
-- openource
+- opensource
 - typescript
 description: Today we are launching the beta of EmDash, a full-stack serverless JavaScript
   CMS built on Astro 6.0. It combines the features of a traditional CMS with modern

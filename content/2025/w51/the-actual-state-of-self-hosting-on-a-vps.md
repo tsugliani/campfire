@@ -4,8 +4,7 @@ url_link: https://bogomolov.work/blog/posts/the-actual-state-of-self-hosting-on-
 tags:
 - docker
 - kubernetes
-- podman
-- quadlet
+- containers
 description: 'I recently ran into a claim: Docker Compose is outdated and K3s is the
   king for my 1Gb VPS. At the same time, docker-compose.py is effectively deprecated,
   with Compose now shipped as a built-in docker compose command. That alone is not

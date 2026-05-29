@@ -5,7 +5,6 @@ tags:
 - security
 - web
 - api
-- oauth2
 description: Why the OAuth2 protocol was designed the way it is and how it works.
 date: '2025-01-26'
 year: 2025

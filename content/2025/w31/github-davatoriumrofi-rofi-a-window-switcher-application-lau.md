@@ -5,8 +5,8 @@ url_link: https://github.com/davatorium/rofi
 tags:
 - linux
 - terminal
-- application-launcher
-- window-switcher
+- applicationlauncher
+- windowswitcher
 description: 'Rofi: A window switcher, application launcher and dmenu replacement
   - davatorium/rofi'
 date: '2025-08-02'

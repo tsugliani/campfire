@@ -6,8 +6,8 @@ tags:
 - rust
 - uv
 - pubgrub
-- dependency-resolution
-- open-source
+- dependencyresolution
+- opensource
 description: 'A thorough walkthrough of uv''s internals: the Rust crate architecture,
   what uv init actually does on disk, the two-thread resolver design, how PubGrub''s
   CDCL algorithm works, batch prefetching, the forking resolver, and why these Rust-specific

@@ -5,7 +5,7 @@ title: 'GitHub - switz/box-of-rain: Auto-layouted ASCII/svg diagrams generated f
 url_link: https://github.com/switz/box-of-rain
 tags:
 - cli
-- ascii
+- terminal
 - svg
 - mermaid
 description: Auto-layouted ASCII/svg diagrams generated from simple configuration.

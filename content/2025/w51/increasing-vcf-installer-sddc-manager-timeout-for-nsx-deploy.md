@@ -5,7 +5,6 @@ tags:
 - vmware
 - nsx
 - vcf
-- sddcmanager
 description: For resource constrained environments, deploying VMware Cloud Foundation
   (VCF) can take longer, especially when deploying on top of a Nested ESXi configuration.
   However, the VCF Installer does prov…

@@ -3,7 +3,7 @@ title: Default Methods in Go · mcyoung
 url_link: https://mcyoung.xyz/2025/08/25/go-default-methods/#required-embeds
 tags:
 - golang
-- language-design
+- languagedesign
 description: 'Go’s interfaces are very funny. Rather than being explicitly implemented,
   like
 

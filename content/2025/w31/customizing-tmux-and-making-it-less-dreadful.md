@@ -4,7 +4,6 @@ url_link: https://evgeniipendragon.com/posts/customizing-tmux-and-making-it-less
 tags:
 - terminal
 - customization
-- tmux
 - linux
 description: 'I have been exploring some new tools here and there. When I started
   watching Primeagen, I took a note of several tools that he was using and advocating

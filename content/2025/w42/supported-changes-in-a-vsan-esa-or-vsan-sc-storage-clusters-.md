@@ -5,7 +5,6 @@ tags:
 - vmware
 - storage
 - hardware
-- esxi
 description: '  '
 date: '2025-10-18'
 year: 2025

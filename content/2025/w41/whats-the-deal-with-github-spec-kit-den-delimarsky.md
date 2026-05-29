@@ -5,7 +5,7 @@ tags:
 - ai
 - opensource
 - development
-- spec-driven-development
+- specdrivendevelopment
 description: Get to know the latest open source toolkit from GitHub that allows you
   to use Spec-Driven Development in any AI coding agent.
 date: '2025-10-12'

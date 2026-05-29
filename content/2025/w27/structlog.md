@@ -3,7 +3,7 @@ title: structlog
 url_link: https://www.structlog.org/en/stable/
 tags:
 - python
-- logging
+- monitoring
 - development
 - performance
 description: 'Simple. Powerful. Fast. Pick three. Release 25.5.0( What’s new?) structlog

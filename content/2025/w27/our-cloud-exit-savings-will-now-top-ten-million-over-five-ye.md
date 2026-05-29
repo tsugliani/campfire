@@ -5,7 +5,7 @@ tags:
 - cloud
 - hardware
 - savings
-- datacenter
+- infrastructure
 description: We finished pulling seven cloud apps, including HEY, out of AWS and onto
   our own hardware last summer. But it took until the end of that year for all the
   long-term contract commitments to end, so 2024 has been the first clean year of

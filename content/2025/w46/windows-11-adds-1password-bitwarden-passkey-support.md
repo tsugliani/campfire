@@ -4,8 +4,6 @@ url_link: https://petri.com/windows-11-1password-bitwarden-passkey-support/
 tags:
 - windows
 - security
-- passkey
-- authentication
 description: Windows 11 now supports 1Password and Bitwarden passkeys, enabling faster,
   safer, and passwordless sign-ins across devices.
 date: '2025-11-15'

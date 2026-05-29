@@ -2,7 +2,6 @@
 title: Red Hat Developer Subscription for Individuals
 url_link: https://blog.graa.dev/RedHat-DeveloperSubscription
 tags:
-- redhat
 - linux
 - homelab
 - subscription

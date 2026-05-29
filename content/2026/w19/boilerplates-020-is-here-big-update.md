@@ -5,7 +5,7 @@ tags:
 - cli
 - ssh
 - docker
-- templates
+- template
 description: "Boilerplates 0.2.0 is here, and this update changes quite a lot about\
   \ how my templates work! In this video, I show you what changed in Boilerplates\
   \ 0.2.0, why the app and template library are now split into separate repositories,\

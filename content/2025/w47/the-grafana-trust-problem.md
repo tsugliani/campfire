@@ -3,7 +3,6 @@ title: The Grafana trust problem
 url_link: https://henrikgerdes.me/blog/2025-11-grafana-mess/
 tags:
 - monitoring
-- grafana
 - kubernetes
 - stability
 description: The Grafana Stack can be an incredible powerful monitoring solution,

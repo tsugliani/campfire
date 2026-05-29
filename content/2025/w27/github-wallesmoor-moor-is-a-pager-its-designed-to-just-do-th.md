@@ -5,8 +5,7 @@ url_link: https://github.com/walles/moar
 tags:
 - terminal
 - pager
-- go
-- console
+- golang
 description: Moor is a pager. It's designed to just do the right thing without any
   configuration. - walles/moor
 date: '2025-07-03'

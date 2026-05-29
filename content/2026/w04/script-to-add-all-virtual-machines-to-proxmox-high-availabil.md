@@ -5,7 +5,7 @@ tags:
 - proxmox
 - virtualization
 - script
-- ha
+- infrastructure
 description: Hi all, just a quick note I wanted to toss out here. If you are looking
   for a script to add all of your Proxmox virtual machines to HA without having ...
 date: '2026-01-25'

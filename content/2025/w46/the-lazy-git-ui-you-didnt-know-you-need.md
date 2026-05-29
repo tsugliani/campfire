@@ -3,8 +3,7 @@ title: The (lazy) Git UI You Didn't Know You Need
 url_link: https://www.bwplotka.dev/2025/lazygit/
 tags:
 - git
-- lazygit
-- tui
+- terminal
 - productivity
 description: When my son was born last April, I had ambitious learning plans for the
   upcoming 5w paternity leave. As you can imagine, with two kids, life quickly verified

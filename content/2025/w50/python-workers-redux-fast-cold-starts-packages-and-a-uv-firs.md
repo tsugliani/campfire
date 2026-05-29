@@ -4,7 +4,6 @@ url_link: https://blog.cloudflare.com/python-workers-advancements/
 tags:
 - python
 - cloud
-- serverless
 - performance
 description: Recent advancements in Cloudflare Python Workers means fast cold starts,
   comprehensive package support, and a great developer experience. We explain how

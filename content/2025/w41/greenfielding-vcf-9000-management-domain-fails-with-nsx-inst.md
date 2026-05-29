@@ -5,7 +5,7 @@ tags:
 - vmware
 - troubleshooting
 - nsx
-- vcf9
+- vcf
 description: An hour after celebrating a successful validation in the VCF 9.0 installer
   and getting ready for real deployment testing (which I made a short LinkedIn post
   about yesterday), things went sideways. …

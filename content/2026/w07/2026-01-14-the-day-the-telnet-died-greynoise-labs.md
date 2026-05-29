@@ -4,7 +4,6 @@ url_link: https://www.labs.greynoise.io/grimoire/2026-02-10-telnet-falls-silent/
 tags:
 - security
 - telnet
-- cve
 - infrastructure
 description: On January 14, 2026, global telnet traffic observed by GreyNoise sensors
   fell off a cliff. A 59% sustained reduction, eighteen ASNs going completely silent,

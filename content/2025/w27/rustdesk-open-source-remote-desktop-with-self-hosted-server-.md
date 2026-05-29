@@ -4,7 +4,7 @@ url_link: https://rustdesk.com/?lang=en
 tags:
 - remote
 - desktop
-- selfhosting
+- homelab
 - opensource
 description: RustDesk is the best open-source remote desktop software. Secure alternative
   to TeamViewer and AnyDesk with self-hosted servers. Cross-platform support for Windows,

@@ -4,7 +4,7 @@ url_link: https://github.com/mr-karan/doggo?ref=terminaltrove
 tags:
 - cli
 - golang
-- dns
+- networking
 - web
 description: ':dog: Command-line DNS Client for Humans. Written in Golang - mr-karan/doggo'
 date: '2025-07-03'

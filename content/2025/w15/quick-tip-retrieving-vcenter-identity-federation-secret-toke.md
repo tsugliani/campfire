@@ -3,7 +3,7 @@ title: Quick Tip - Retrieving vCenter Identity Federation Secret Token Expiry
 url_link: https://williamlam.com/2025/04/quick-tip-retrieving-vcenter-identity-federation-secret-token-expiry.html
 tags:
 - vmware
-- jwt
+- security
 description: As part of setting up vCenter Server or VMware Cloud Foundation (VCF)
   Identity Federation, if your identity provider supports the SCIM (System for Cross-domain
   Identity Management) protocol, you mu…

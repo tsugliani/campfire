@@ -4,7 +4,7 @@ url_link: https://dotfiles.substack.com/p/whats-new-in-neovim-012
 tags:
 - neovim
 - lua
-- plugins
+- plugin
 - lsp
 description: Neovim 0.12.0 was released on March 29, 2026. This release adds a built-in
   plugin manager, expands built-in LSP support, introduces native insert-mode auto-completion,

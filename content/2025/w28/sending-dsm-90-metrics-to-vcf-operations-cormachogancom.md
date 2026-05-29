@@ -4,7 +4,7 @@ url_link: https://cormachogan.com/2025/07/08/sending-dsm-9-0-metrics-to-vcf-oper
 tags:
 - vmware
 - vcf
-- metrics
+- monitoring
 - api
 description: 'In the DSM 9.0 Release Notes, the following item about metrics is listed
   in the What’s New section: You can use the VMware Data Services Manager API to publish

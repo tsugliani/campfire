@@ -4,7 +4,7 @@ url_link: https://linkding.link/
 tags:
 - web
 - api
-- sqlite
+- database
 - docker
 description: A self-hosted bookmarking service that is designed to be minimal, fast
   and easy to set up.

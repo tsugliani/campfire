@@ -4,9 +4,7 @@ url_link: https://learnkube.com/kubernetes-api-explained
 tags:
 - kubernetes
 - api
-- etcd
-- authentication
-- authorization
+- security
 - admission
 description: Learn how requests flow through the Kubernetes API server — from authentication
   to etcd storage.

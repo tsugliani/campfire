@@ -2,7 +2,7 @@
 title: lvm and xcopy
 url_link: https://vskeeball.com/2026/04/22/lvm-and-xcopy/
 tags:
-- lvm
+- storage
 - xcopy
 - linux
 - vmware

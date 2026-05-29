@@ -5,7 +5,7 @@ tags:
 - docker
 - webrtc
 - screensharing
-- go
+- golang
 description: screen sharing for developers https://screego.net/ - screego/server
 date: '2025-10-24'
 year: 2025

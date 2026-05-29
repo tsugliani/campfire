@@ -4,7 +4,7 @@ url_link: https://www.georgejose.com/Blog/obsidian-setup-2025
 tags:
 - obsidian
 - customization
-- plugins
+- plugin
 - organization
 description: 'post Philosophy My overarching goals with writing notes are 2 fold:
   To help me think clearly To serve as a personal knowledge base I can reference later

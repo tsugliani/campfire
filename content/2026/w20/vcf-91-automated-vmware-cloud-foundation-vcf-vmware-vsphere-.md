@@ -4,8 +4,7 @@ title: VCF 9.1 - Automated VMware Cloud Foundation (VCF) & VMware vSphere Founda
 url_link: https://williamlam.com/2026/05/vcf-9-1-automated-vmware-cloud-foundation-vcf-vmware-vsphere-foundation-vvf-nested-lab-deployment.html
 tags:
 - vmware
-- nested
-- esxi
+- virtualization
 - vcf
 description: Nested ESX continues to be a popular way to explore and learn about VMware
   Cloud Foundation (VCF), it is also the basis for the VCF Holodeck solution. With

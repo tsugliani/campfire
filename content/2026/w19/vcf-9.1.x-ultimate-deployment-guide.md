@@ -5,7 +5,7 @@ tags:
 - vmware
 - vcf
 - infrastructure
-- deployment
+- devops
 description: In the VCF 9.1 full deployment guide we cover everything in the private
   cloud platform, and adding workload domains, hosts, clusters and scaling your fleet
 date: '2026-05-07'

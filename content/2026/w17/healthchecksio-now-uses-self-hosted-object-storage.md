@@ -4,8 +4,8 @@ url_link: https://blog.healthchecks.io/2026/04/healthchecks-io-now-uses-self-hos
 tags:
 - storage
 - s3
-- postgresql
-- selfhosted
+- database
+- homelab
 description: Healthchecks.io ping endpoints accept HTTP HEAD, GET, and POST request
   methods. When using HTTP POST, clients can include an arbitrary payload in the request
   body. Healthchecks.io stores the first 100kB of the request body. If the request

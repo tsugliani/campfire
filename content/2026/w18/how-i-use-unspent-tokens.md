@@ -5,7 +5,6 @@ tags:
 - ai
 - development
 - testing
-- refactoring
 description: Building a small test-gated janitor loop, teaching it taste and moving
   to bigger targets.
 date: '2026-04-28'

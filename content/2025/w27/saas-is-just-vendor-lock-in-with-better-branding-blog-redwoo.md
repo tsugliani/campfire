@@ -2,8 +2,7 @@
 title: SaaS Is Just Vendor Lock-In with Better Branding | Blog | RedwoodSDK
 url_link: https://rwsdk.com/blog/saas-is-just-vendor-lock-in-with-better-branding
 tags:
-- saas
-- cloudflare
+- cloud
 - supabase
 - integration
 description: The pitch of modern SaaS is "don't reinvent the wheel." But every wheel

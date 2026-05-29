@@ -4,7 +4,6 @@ url_link: https://daisyui.com/
 tags:
 - web
 - ux
-- css
 - tailwindcss
 description: Tailwind CSS Components Library for 2026 - Tailwind CSS components examples,
   Tailwind themes and Tailwind blocks for fast UI development

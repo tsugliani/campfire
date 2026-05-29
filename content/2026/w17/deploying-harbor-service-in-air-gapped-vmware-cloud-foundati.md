@@ -4,7 +4,7 @@ url_link: https://blogs.vmware.com/cloud-foundation/2026/04/21/deploying-harbor-
 tags:
 - vmware
 - containers
-- deployment
+- devops
 - airgapped
 description: Learn how to deploy Harbor Supervisor Service in air-gapped VCF 9.0 using
   a two-phase bootstrap approach. Complete step-by-step guide.

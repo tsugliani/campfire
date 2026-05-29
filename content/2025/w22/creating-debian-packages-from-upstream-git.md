@@ -3,9 +3,9 @@ title: Creating Debian packages from upstream Git
 url_link: https://optimizedbyotto.com/post/debian-packaging-from-git/
 tags:
 - git
-- debian
+- linux
 - packaging
-- upstream
+- opensource
 description: In this post, I demonstrate the optimal workflow for creating new Debian
   packages in 2025, preserving the upstream Git history. The motivation for this is
   to lower the barrier for sharing improvements to and from upstream, and to improve

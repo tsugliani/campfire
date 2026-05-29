@@ -2,10 +2,10 @@
 title: Customizing Talos with Extensions
 url_link: https://a-cup-of.coffee/blog/talos-ext/
 tags:
-- talos
+- kubernetes
 - extensions
 - customization
-- oci
+- containers
 description: Minimalist doesn't mean Talos isn't extensible. Let's dive into the topic
   of extensions to customize and adapt it to our needs.
 date: '2025-04-24'

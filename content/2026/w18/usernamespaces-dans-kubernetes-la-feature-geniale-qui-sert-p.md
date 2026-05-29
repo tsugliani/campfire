@@ -5,7 +5,7 @@ tags:
 - kubernetes
 - security
 - containers
-- user namespaces
+- usernamespaces
 description: L’infographie qui m’a trigger Depuis quelques jours, les infographies
   se suivent (et se ressemblent) sur Linkedin. Kubernetes 1.36 est sorti et une des
   features qui fait le plus parler, c’est la sortie en GA des UserNamespaces.\nC’est

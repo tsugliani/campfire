@@ -5,7 +5,7 @@ url_link: https://kau.sh/blog/usbi/
 tags:
 - cli
 - ai
-- go
+- golang
 - macos
 description: A quick cli script to tell you if your usb-c cable is bad
 date: '2025-10-08'

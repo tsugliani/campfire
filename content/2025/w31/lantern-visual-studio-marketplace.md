@@ -2,10 +2,9 @@
 title: Lantern - Visual Studio Marketplace
 url_link: https://marketplace.visualstudio.com/items?itemName=sinedied.lantern#features
 tags:
-- vscode
+- development
 - ai
-- colors
-- hue
+- ux
 description: Extension for Visual Studio Code - Give your VS Code workspaces unique
   colors with optional Philips Hue integration
 date: '2025-08-01'

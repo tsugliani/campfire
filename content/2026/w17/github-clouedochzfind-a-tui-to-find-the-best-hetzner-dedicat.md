@@ -1,10 +1,10 @@
 ---
-title: 'GitHub - clouedoc/hzfind:' 
+title: 'GitHub - clouedoc/hzfind:'
 url_link: https://github.com/clouedoc/hzfind
 tags:
 - rust
 - cli
-- tui
+- terminal
 - hetzner
 description: A TUI to find the best Hetzner dedicated server auction deals, with PassMark
   CPU benchmarks built-in - clouedoc/hzfind

@@ -5,7 +5,7 @@ tags:
 - proxmox
 - rust
 - cli
-- tui
+- terminal
 description: Terminal cockpit for Proxmox VE and Backup Server, gated on a real cluster.
 date: '2026-05-06'
 year: 2026

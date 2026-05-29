@@ -3,7 +3,7 @@ title: Introducing the VCF.JSONGenerator PowerShell Module for VMware Cloud Foun
 url_link: https://feardamhan.com/2025/08/14/introducing-the-vcf-jsongenerator-powershell-module-for-vmware-cloud-foundation/
 tags:
 - vmware
-- powershell
+- windows
 - cloud
 - json
 description: If you’ve been about VMware Cloud Foundation at all, you’ve likely come

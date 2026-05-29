@@ -3,8 +3,7 @@ title: Applite
 url_link: https://aerolite.dev/applite
 tags:
 - macos
-- gui
-- homebrew
+- desktop
 - opensource
 description: User-friendly GUI macOS application for Homebrew Casks
 date: '2025-07-10'

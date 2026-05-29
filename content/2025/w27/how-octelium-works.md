@@ -5,7 +5,6 @@ tags:
 - kubernetes
 - security
 - api
-- zerotrust
 description: Octelium is a unified zero trust architecture (ZTA) that is built to
   be generic enough to operate as a zero-config remote access VPN, a Zero Trust Network…
 date: '2025-07-06'

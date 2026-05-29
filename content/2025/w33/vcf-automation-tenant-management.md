@@ -5,7 +5,7 @@ tags:
 - vmware
 - cloud
 - automation
-- tenant-management
+- tenantmanagement
 description: In today’s multi-tenant cloud environments, VMware Cloud Foundation Automation
   (VCFA) offers a robust layered architecture that seamlessly bridges enterprise-grade
   infrastructure management with de…

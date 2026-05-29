@@ -4,8 +4,7 @@ url_link: https://williamlam.com/2026/05/vcf-9-1-automating-vcf-single-sign-on-s
 tags:
 - vmware
 - automation
-- sso
-- oidc
+- security
 description: There are a number of exciting enhancements to VMware Cloud Foundation
   (VCF) Single Sign-On (SSO) with the release of VCF 9.1 from Generic OIDC/SAML2 Identity
   Provider (IdP) support, streamline way…

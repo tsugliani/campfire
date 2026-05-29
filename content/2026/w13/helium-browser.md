@@ -3,7 +3,7 @@ title: Helium Browser
 url_link: https://helium.computer/
 tags:
 - web
-- privacy
+- security
 - opensource
 - desktop
 description: The web browser made for people, with love. Best privacy by default,

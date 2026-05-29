@@ -4,7 +4,7 @@ url_link: https://cal.rs/
 tags:
 - rust
 - scheduling
-- selfhostable
+- homelab
 - opensource
 description: Connect your CalDAV calendar, define bookable meetings, share a link.
   No Node.js, no PostgreSQL, no subscription.

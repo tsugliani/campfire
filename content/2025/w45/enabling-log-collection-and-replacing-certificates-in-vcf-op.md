@@ -4,8 +4,8 @@ title: Enabling Log Collection and Replacing Certificates in VCF Operations for 
 url_link: https://blog.yahyazahedi.com/2025/11/05/enabling-log-collection-and-replacing-certificates-in-vcf-operations-for-logs/
 tags:
 - vmware
-- logs
-- certificates
+- monitoring
+- security
 - vcf
 description: In the previous post, I deployed a VCF Operations for Logs appliance,
   but initial configuration still needs to completed. In this post, I will first enable

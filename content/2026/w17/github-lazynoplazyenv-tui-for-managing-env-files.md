@@ -5,7 +5,6 @@ tags:
 - cli
 - golang
 - terminal
-- tui
 description: TUI for managing .env files. Contribute to lazynop/lazyenv development
   by creating an account on GitHub.
 date: '2026-04-24'

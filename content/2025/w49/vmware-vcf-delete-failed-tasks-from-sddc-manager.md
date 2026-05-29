@@ -3,7 +3,7 @@ title: VMware VCF – Delete failed tasks from SDDC Manager
 url_link: https://virtualrove.com/2025/12/05/vmware-vcf-delete-failed-tasks-from-sddc-manager/
 tags:
 - vmware
-- sddc
+- infrastructure
 - devops
 - ssh
 description: VMware Cloud Foundation (VCF), deleting failed tasks is often necessary to

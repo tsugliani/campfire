@@ -6,7 +6,7 @@ tags:
 - networking
 - terminal
 - rust
-- diagnostics
+- troubleshooting
 description: Real-time network diagnostics in your terminal. One command, zero config,
   instant visibility. - matthart1983/netwatch
 date: '2026-04-06'

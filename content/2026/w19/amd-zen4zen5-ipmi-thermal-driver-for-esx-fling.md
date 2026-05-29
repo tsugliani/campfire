@@ -4,7 +4,6 @@ url_link: https://williamlam.com/2026/05/amd-zen4-zen5-ipmi-thermal-driver-for-e
 tags:
 - vmware
 - hardware
-- esxi
 - ipmi
 description: Happy Friday! 🥳 A couple of weeks back, Wenchao (creator of the Realtek
   Network Driver for ESX Fling) reached out to me to share an exciting development

@@ -4,7 +4,7 @@ title: 'GitHub - cdump/proton-tui: A modern, unofficial ProtonVPN Terminal User 
 url_link: https://github.com/cdump/proton-tui
 tags:
 - rust
-- tui
+- terminal
 - protonvpn
 - wireguard
 description: A modern, unofficial ProtonVPN Terminal User Interface (TUI) for Linux,

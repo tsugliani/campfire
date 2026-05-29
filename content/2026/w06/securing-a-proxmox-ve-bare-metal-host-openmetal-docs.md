@@ -5,7 +5,6 @@ tags:
 - proxmox
 - security
 - ssh
-- firewall
 description: 'Author: Nemanja Ilic'
 date: '2026-02-04'
 year: 2026

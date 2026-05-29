@@ -4,8 +4,7 @@ url_link: https://net-security.fr/systeme/rsyslog-tls/
 tags:
 - linux
 - security
-- rsyslog
-- tls
+- monitoring
 description: 'Bonjour à tous ! Aujourd''hui un article pour parler d''une chose simple
   : la configuration de la solution rsyslog sur un serveur GNU/Linux en utilisant
   les …'

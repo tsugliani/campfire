@@ -5,7 +5,7 @@ tags:
 - vmware
 - azure
 - ad
-- scim
+- security
 description: '  '
 date: '2025-07-03'
 year: 2025

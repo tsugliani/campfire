@@ -2,7 +2,7 @@
 title: Simple DNS Blackhole
 url_link: https://www.morgandavis.net/post/simple-dns-blackhole
 tags:
-- dns
+- networking
 - linux
 description: Tired of Annoying Ads and Privacy-Invading Trackers? Here’s How to Take
   Control...

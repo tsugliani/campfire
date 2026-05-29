@@ -5,7 +5,7 @@ tags:
 - web
 - opensource
 - collaboration
-- design
+- ux
 description: 'Penpot is the open-source free design software that connects designers
   and developers with no handoff drama. Prototyping, UI design and code - all in one
   app. '

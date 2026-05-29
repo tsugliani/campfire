@@ -3,8 +3,7 @@ title: Setting up VCF SSO
 url_link: https://brisk-it.net/setting-up-vcf-sso/
 tags:
 - vmware
-- sso
-- identity
+- security
 - broker
 description: Lately, I’ve been spending a lot of time getting our company lab set
   up and configured with all the bells and whistles that VCF 9 brings to the table.

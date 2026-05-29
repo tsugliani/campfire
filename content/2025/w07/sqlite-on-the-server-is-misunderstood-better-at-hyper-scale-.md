@@ -3,7 +3,6 @@ title: 'SQLite-on-the-Server Is Misunderstood: Better At Hyper-Scale Than Micro-
   - Rivet'
 url_link: https://rivet.gg/blog/2025-02-16-sqlite-on-the-server-is-misunderstood
 tags:
-- sqlite
 - database
 - cloud
 - scale

@@ -4,7 +4,6 @@ url_link: https://www.youtube.com/watch?v=00Y-p62sk0s
 tags:
 - ai
 - local
-- benchmark
 - performance
 description: 'Model providers DON''T want you to see this video. The M5 Max just exposed
   the dirty secret of the cloud LLM economy: you''re renting what you could already

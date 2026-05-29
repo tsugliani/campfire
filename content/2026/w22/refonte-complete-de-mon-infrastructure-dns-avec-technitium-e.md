@@ -3,7 +3,7 @@ title: Refonte complète de mon infrastructure DNS avec Technitium et AdGuard Ho
   en haute disponibilité
 url_link: https://domopi.eu/refonte-complete-de-mon-infrastructure-dns-avec-technitium-et-adguard-home-en-haute-disponibilite/
 tags:
-- dns
+- networking
 - homelab
 - proxmox
 - adguardhome

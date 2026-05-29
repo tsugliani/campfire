@@ -5,7 +5,7 @@ tags:
 - development
 - troubleshooting
 - production
-- backups
+- infrastructure
 description: Last April, I wrote a well-received article about the 13 software engineering
   laws - Hyrum’s, Conway’s, Zawinski’s, and 10 famous others.
 date: '2026-03-17'

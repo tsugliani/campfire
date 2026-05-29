@@ -6,7 +6,7 @@ tags:
 - vmware
 - automation
 - vcf
-- workload
+- kubernetes
 description: ✳️ IntroductionWith the release of VMware Cloud Foundation 9 (VCF 9),
   VMware has introduced a major architectural evolution—consolidating Day-2 operations,
   automation, and lifecycle tasks into VCF Operations (VCF OPS).One of the most notable

@@ -4,7 +4,7 @@ url_link: https://robbowen.digital/wrote-about/abandoned-side-projects/
 tags:
 - career
 - development
-- side-project
+- sideproject
 - learning
 description: In an industry that pressures developers to always be shipping side-projects,
   it can be helpful to be retrospective with the projects that don't make the cut

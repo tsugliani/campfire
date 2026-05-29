@@ -4,8 +4,6 @@ url_link: https://www.youtube.com/watch?v=uOnL4fEnldA
 tags:
 - macos
 - terminal
-- alacritty
-- wezterm
 description: 'I recently switched from iTerm2 to Alacritty and in this video I show
   you everything I do to create a minimal, amazing & fast terminal setup with it on
   macOs. I''ve really enjoyed this change. Hope you guys enjoy the video!

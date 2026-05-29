@@ -4,7 +4,6 @@ url_link: https://xn--gckvb8fzb.com/privacy-setup-for-android-16-with-grapheneos
 tags:
 - android
 - grapheneos
-- privacy
 - security
 description: 'A guide to figure out whether GrapheneOS makes sense for you and how
   to set up

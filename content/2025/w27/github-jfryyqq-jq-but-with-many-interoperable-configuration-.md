@@ -4,7 +4,7 @@ title: 'GitHub - JFryy/qq: jq, but with many interoperable configuration format 
 url_link: https://github.com/JFryy/qq?tab=readme-ov-file
 tags:
 - cli
-- go
+- golang
 - transcoding
 - query
 description: jq, but with many interoperable configuration format transcodings and

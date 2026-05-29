@@ -5,7 +5,6 @@ tags:
 - vmware
 - networking
 - troubleshooting
-- mtu
 description: '  '
 date: '2025-10-18'
 year: 2025

@@ -5,7 +5,7 @@ tags:
 - python
 - cli
 - development
-- tui
+- terminal
 description: TUI for chezmoi. Contribute to djetelina/cheznav development by creating
   an account on GitHub.
 date: '2026-05-14'

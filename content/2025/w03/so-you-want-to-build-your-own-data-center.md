@@ -3,7 +3,6 @@ title: So You Want to Build Your Own Data Center
 url_link: https://blog.railway.com/p/data-center-build-part-one
 tags:
 - infrastructure
-- datacenter
 - hardware
 - networking
 description: 'When it comes to infrastructure engineering, building a data center

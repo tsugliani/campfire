@@ -5,7 +5,6 @@ tags:
 - linux
 - security
 - ssh
-- nftables
 description: 'Introduction
 
   Knock Knock Knock ! Connaissez-vous le port knocking ?

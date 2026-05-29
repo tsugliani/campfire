@@ -4,7 +4,7 @@ url_link: https://une-tasse-de.cafe/blog/crd-vs-apiservice/
 tags:
 - kubernetes
 - infrastructure
-- go
+- golang
 - api
 description: CRD ou APIService ? Deux façons d'étendre l'API Kubernetes avec des philosophies
   radicalement différentes. On compare les deux avec des exemples concrets !

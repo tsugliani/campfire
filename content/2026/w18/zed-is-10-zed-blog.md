@@ -2,7 +2,7 @@
 title: Zed is 1.0 - Zed Blog
 url_link: https://zed.dev/blog/zed-1-0
 tags:
-- editor
+- development
 - rust
 - ai
 - desktop

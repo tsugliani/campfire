@@ -3,7 +3,6 @@ title: Finesse UI — The only Figma UI Kit you will need
 url_link: https://finesse.framer.website/
 tags:
 - ux
-- design
 - figma
 - components
 description: Finesse UI Kit has been carefully crafted to meet the needs of designers

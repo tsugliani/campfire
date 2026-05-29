@@ -3,9 +3,8 @@ title: 2026 is the Year of Self-hosting
 url_link: https://fulghum.io/self-hosting
 tags:
 - cli
-- self-hosting
-- linux
 - homelab
+- linux
 description: CLI agents like Claude Code make self-hosting dramatically easier and
   actually fun. This is the first time I would recommend it to normal software-literate
   people.

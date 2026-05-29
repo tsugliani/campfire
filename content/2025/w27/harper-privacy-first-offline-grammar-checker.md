@@ -2,7 +2,7 @@
 title: Harper | Privacy-First Offline Grammar Checker
 url_link: https://writewithharper.com/
 tags:
-- privacy
+- security
 - opensource
 - rust
 - web

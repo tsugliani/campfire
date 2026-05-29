@@ -3,9 +3,8 @@ title: 'Free lance Free mVPN : le premier VPN intégré au réseau mobile, inclu
   ses forfaits'
 url_link: https://portail.free.fr/mag-free/nouveautes/free-mvpn-vpn-integre-reseau-mobile-inclus/
 tags:
-- vpn
-- mobile
 - security
+- mobile
 - web
 description: Free lance Free mVPN, un VPN grand public intégré au réseau mobile et
   inclus dans les forfaits Free 5G et Série Free. Activation en 1 clic, session 12h,

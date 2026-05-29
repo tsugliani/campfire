@@ -6,7 +6,7 @@ tags:
 - vmware
 - automation
 - api
-- powershell
+- windows
 description: What Kabir Writes
 date: '2025-12-18'
 year: 2025

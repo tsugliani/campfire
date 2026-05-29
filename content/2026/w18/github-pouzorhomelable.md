@@ -5,7 +5,7 @@ tags:
 - homelab
 - infrastructure
 - monitoring
-- network
+- networking
 description: Self-hosted homelab infrastructure visualizer — interactive network diagram
   with live status monitoring - Pouzor/homelable
 date: '2026-04-30'

@@ -5,7 +5,7 @@ tags:
 - vmware
 - kubernetes
 - ai
-- gpu
+- hardware
 description: Why VMware VKS Is a Stronger Enterprise Choice Than KubeVirt | vmtechie.blog
   KubeVirt is a capable open-source project and a legitimate choice in the right context.
   But when the workload is enterpr…

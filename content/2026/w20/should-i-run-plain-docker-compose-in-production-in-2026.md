@@ -3,9 +3,9 @@ title: Should I Run Plain Docker Compose in Production in 2026?
 url_link: https://distr.sh/blog/running-docker-in-production/
 tags:
 - docker
-- compose
+- containers
 - production
-- operations
+- devops
 description: 'Yes, plain Docker Compose can still run production workloads in 2026—if
   you close the operational gaps it leaves: cleanup, healing, image pinning, socket
   security, and updates.'

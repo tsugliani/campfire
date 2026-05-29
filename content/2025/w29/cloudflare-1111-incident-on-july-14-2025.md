@@ -2,10 +2,9 @@
 title: Cloudflare 1.1.1.1  Incident on July 14, 2025
 url_link: https://blog.cloudflare.com/cloudflare-1-1-1-1-incident-on-july-14-2025/
 tags:
-- cloudflare
-- dns
-- outage
-- bgp
+- cloud
+- networking
+- troubleshooting
 description: 'On July 14th, 2025, Cloudflare made a change to our service topologies
   that caused an outage for 1.1.1.1 on the edge, resulting in downtime for 62 minutes
   for customers using the 1.1.1.1 public DNS Resolver as well as intermittent degradation

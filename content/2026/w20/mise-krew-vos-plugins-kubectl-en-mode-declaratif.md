@@ -4,7 +4,7 @@ url_link: https://une-tasse-de.cafe/expresso/mise-krew/
 tags:
 - kubernetes
 - devops
-- plugins
+- plugin
 - automation
 description: Comment Mise arrive à résoudre les problèmes de Krew et du tooling interne
   des équipes SRE en général

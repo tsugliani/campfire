@@ -4,7 +4,6 @@ url_link: https://cormachogan.com/2025/08/21/support-for-iscsi-in-vmware-cloud-f
 tags:
 - vmware
 - storage
-- iscsi
 - vcf
 description: Good news here for customers who use iSCSI in their current vSphere environments
   and are looking to move to VCF

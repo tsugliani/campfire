@@ -2,7 +2,7 @@
 title: 'Janus: Multi-Tenant Access Control for Observability-Data'
 url_link: https://marschall.systems/blog/janus-release/
 tags:
-- observability
+- monitoring
 - security
 - opensource
 - kubernetes

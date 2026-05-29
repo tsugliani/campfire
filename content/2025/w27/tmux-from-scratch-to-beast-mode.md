@@ -2,7 +2,6 @@
 title: Tmux From Scratch To BEAST MODE
 url_link: https://www.youtube.com/watch?v=GH3kpsbbERo&t=260s
 tags:
-- tmux
 - terminal
 - configuration
 - cli

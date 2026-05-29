@@ -2,7 +2,7 @@
 title: 4x faster network file sync with rclone (vs rsync)
 url_link: https://www.jeffgeerling.com/blog/2025/4x-faster-network-file-sync-rclone-vs-rsync/
 tags:
-- network
+- networking
 - rclone
 - rsync
 - performance

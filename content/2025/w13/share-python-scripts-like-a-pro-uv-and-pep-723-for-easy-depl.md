@@ -5,7 +5,7 @@ tags:
 - python
 - uv
 - pep723
-- deployment
+- devops
 description: We all love Python’s comprehensive standard library, but let’s face it
   – PyPI’s wealth of packages often becomes essential. Sharing single-file, self-contained
   Python scripts that rely on these external tools can be a headache. Historically,

@@ -2,8 +2,8 @@
 title: Home | mise-en-place
 url_link: https://mise.jdx.dev/
 tags:
-- devtools
-- environments
+- development
+- environment
 - tasks
 - polyglot
 description: mise-en-place documentation

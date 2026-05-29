@@ -6,7 +6,7 @@ tags:
 - vmware
 - automation
 - vcf
-- post-deployment
+- devops
 description: After deploying a new VMware Cloud Foundation environment in my lab,
   I typically apply a set of post-deployment configurations across components such
   as vCenter and NSX, depending on the specific s…

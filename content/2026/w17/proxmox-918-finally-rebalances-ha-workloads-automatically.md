@@ -4,8 +4,7 @@ url_link: https://www.virtualizationhowto.com/2026/04/proxmox-9-1-8-finally-reba
 tags:
 - proxmox
 - virtualization
-- home
-- lab
+- homelab
 description: Proxmox 9.1.8 adds automatic HA rebalancing and Dynamic Load scheduling.
   A look at how it works and why it matters for your home lab.
 date: '2026-04-24'

@@ -5,7 +5,7 @@ tags:
 - ai
 - async
 - agents
-- transport
+- networking
 description: Agents used to be a thing you talked to synchronously. Now they’re a
   thing that runs in the background while you work. When you make that change, the
   …

@@ -4,7 +4,7 @@ title: Replacing an Standard key management server (KMS) with the VMware native 
 url_link: https://knowledge.broadcom.com/external/article/415437/replacing-an-standard-key-management-ser.html
 tags:
 - vmware
-- encryption
+- security
 - keymanagement
 - rekey
 description: '  '

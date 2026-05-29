@@ -5,7 +5,7 @@ tags:
 - vmware
 - vcf
 - automation
-- deployment
+- devops
 description: 'When deploying a new VMware Cloud Foundation (VCF) Fleet, users can
   choose from two different deployment models: Simple (one-node) or High-Availability
   (3-node) within the VCF Installer, which appl…'

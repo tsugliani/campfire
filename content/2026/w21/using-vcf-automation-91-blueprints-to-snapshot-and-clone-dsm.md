@@ -4,7 +4,7 @@ title: Using VCF Automation 9.1 Blueprints to snapshot and clone DSM provisioned
 url_link: https://cormachogan.com/2026/05/19/using-vcf-automation-9-1-blueprints-to-snapshot-and-clone-dsm-provisioned-mysql-databases/
 tags:
 - vmware
-- mysql
+- database
 - vcf
 - automation
 description: In Data Services Manager version 9.1, MySQL databases can now leverage

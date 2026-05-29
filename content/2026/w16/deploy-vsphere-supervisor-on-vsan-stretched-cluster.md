@@ -5,7 +5,7 @@ tags:
 - vmware
 - kubernetes
 - vsan
-- deployment
+- devops
 description: The blog outlines deploying the vSphere Supervisor on a vSAN Stretched
   Cluster, essential for maintaining high availability and disaster recovery of Kubernetes
   workloads. It details prerequisites, …

@@ -2,9 +2,8 @@
 title: An update on GitHub availability
 url_link: https://github.blog/news-insights/company-news/an-update-on-github-availability/
 tags:
-- availability
-- reliability
-- github
+- infrastructure
+- git
 - engineering
 description: Here’s what we’ve done—and what we’re still doing—to improve our availability
   and reliability.

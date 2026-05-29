@@ -4,7 +4,6 @@ url_link: https://knowledge.broadcom.com/external/article/319926/vsan-proactive-
 tags:
 - vmware
 - rebalance
-- vcenter
 - storage
 description: '  '
 date: '2025-10-18'

@@ -5,7 +5,7 @@ tags:
 - typst
 - writing
 - formats
-- multi-target
+- multitarget
 description: This site uses Typst for its content, and so do my videos, and everything
   else
 date: '2025-12-03'

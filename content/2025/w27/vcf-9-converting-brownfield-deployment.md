@@ -5,7 +5,7 @@ tags:
 - vmware
 - vcf
 - brownfield
-- deployment
+- devops
 description: One of the ways how to start using VMware Cloud Foundation 9 is to convert
   existing vSphere environment. Let’s have a look what is the process. VCF Fleet VCF
   consists of a Fleet Management wi…

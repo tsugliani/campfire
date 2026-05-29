@@ -2,7 +2,7 @@
 title: Introduction - Jujutsu for everyone
 url_link: https://jj-for-everyone.github.io/introduction.html
 tags:
-- versioncontrol
+- git
 - terminal
 - linux
 - macos

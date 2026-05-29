@@ -4,7 +4,7 @@ title: 'GitHub - arashvakil/LeiaGuard: A secure WireGuard VPN management system 
   Built with Next.js 15.'
 url_link: https://github.com/arashvakil/LeiaGuard
 tags:
-- vpn
+- security
 - wireguard
 - nextjs
 - typescript

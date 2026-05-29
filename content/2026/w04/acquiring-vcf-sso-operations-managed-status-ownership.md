@@ -3,8 +3,8 @@ title: Acquiring VCF SSO Operations Managed Status ownership
 url_link: https://knowledge.broadcom.com/external/article/393145/acquiring-vcf-sso-operations-managed-sta.html
 tags:
 - vmware
-- sso
-- operations
+- security
+- devops
 - vcf
 description: '  '
 date: '2026-01-19'

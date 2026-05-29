@@ -5,7 +5,6 @@ tags:
 - vmware
 - vcf
 - licensing
-- vcenter
 description: In previous blog post here, VMware vCloud Foundation 9 – Licensing Part 1
   We talked about registering VCF Operations on the Broadcom Portal and applying licenses
   to VCF Operations. Let’s conti…

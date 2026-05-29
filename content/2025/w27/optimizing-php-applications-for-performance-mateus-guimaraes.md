@@ -4,7 +4,6 @@ url_link: https://mateusguimaraes.com/posts/optimizing-php-applications-for-perf
 tags:
 - php
 - performance
-- optimization
 - opcache
 description: A quick guide on how to set up OPCache and fine-tune PHP-FPM.
 date: '2025-07-03'

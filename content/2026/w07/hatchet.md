@@ -5,7 +5,7 @@ tags:
 - ai
 - api
 - orchestration
-- scalability
+- performance
 description: Deploy More Resilient Apps. Hatchet is a platform for building distributed
   web apps that solves scaling problems like concurrency, fairness, and rate limiting.
 date: '2026-02-14'

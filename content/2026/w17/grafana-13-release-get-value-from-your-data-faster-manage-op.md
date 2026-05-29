@@ -3,7 +3,6 @@ title: 'Grafana 13 release: get value from your data faster, manage operations a
   scale, and more! | Grafana Labs'
 url_link: https://grafana.com/blog/grafana-13-release-all-the-latest-features/
 tags:
-- grafana
 - monitoring
 - ai
 - opensource

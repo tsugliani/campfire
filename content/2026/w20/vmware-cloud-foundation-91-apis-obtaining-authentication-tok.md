@@ -5,7 +5,7 @@ tags:
 - vmware
 - api
 - automation
-- authentication
+- security
 description: This post outlines how organizations can leverage public APIs of the
   VMware Cloud Foundation platform for custom automation. It emphasizes obtaining
   authentication tokens across various endpoints, …

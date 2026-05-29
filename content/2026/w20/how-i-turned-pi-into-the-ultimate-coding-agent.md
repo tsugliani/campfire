@@ -3,7 +3,7 @@ title: How I Turned Pi Into the Ultimate Coding Agent
 url_link: https://www.youtube.com/watch?v=6xXjHM3V1zM
 tags:
 - pi
-- coding
+- development
 - customization
 - minimal
 description: 'Pi has quickly become my favorite coding agent. It''s fast, minimal,

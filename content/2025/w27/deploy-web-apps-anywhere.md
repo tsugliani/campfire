@@ -4,7 +4,7 @@ url_link: https://kamal-deploy.org/
 tags:
 - docker
 - web
-- deployment
+- devops
 - cloud
 description: From bare metal to cloud VMs using Docker, deploy web apps anywhere with
   zero downtime.

@@ -4,7 +4,6 @@ url_link: https://blog.cloudflare.com/your-ips-your-rules-enabling-more-efficien
 tags:
 - networking
 - api
-- ipv4
 - byoip
 description: IPv4 is expensive, and moving network resources around is hard. Previously,
   when customers wanted to use multiple Cloudflare services, they had to bring a new

@@ -2,7 +2,7 @@
 title: I Think It's Time to Give Nix a Chance | Chinmay D. Pai
 url_link: https://maych.in/blog/its-time-to-give-nix-a-chance/
 tags:
-- nix
+- linux
 - development
 - reproducibility
 - isolation

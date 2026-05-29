@@ -4,7 +4,7 @@ url_link: https://bramjetten.dev/articles/the-one-person-framework-in-practice?u
 tags:
 - rails
 - business
-- saas
+- cloud
 - development
 description: How I built a seven-figure business with Rails
 date: '2025-07-03'

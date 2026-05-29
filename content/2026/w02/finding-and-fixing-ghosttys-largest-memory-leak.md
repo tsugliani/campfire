@@ -4,7 +4,6 @@ url_link: https://mitchellh.com/writing/ghostty-memory-leak-fix
 tags:
 - memory
 - leak
-- ghostty
 - terminal
 description: 'A few months ago, users started reporting that Ghostty was consuming
   absurd

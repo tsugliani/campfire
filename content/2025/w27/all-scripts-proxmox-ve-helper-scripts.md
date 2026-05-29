@@ -3,7 +3,7 @@ title: All scripts | Proxmox VE Helper Scripts
 url_link: https://community-scripts.github.io/ProxmoxVE/scripts
 tags:
 - proxmox
-- scripts
+- script
 description: Browse all Proxmox VE community scripts.
 date: '2025-07-03'
 year: 2025

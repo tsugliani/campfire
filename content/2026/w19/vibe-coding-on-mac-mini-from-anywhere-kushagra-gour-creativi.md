@@ -4,7 +4,7 @@ url_link: https://kushagra.dev/blog/vibecoding-on-mac-mini-from-anywhere/
 tags:
 - ssh
 - macos
-- tmux
+- terminal
 - tailscale
 description: Code and Create
 date: '2026-05-08'

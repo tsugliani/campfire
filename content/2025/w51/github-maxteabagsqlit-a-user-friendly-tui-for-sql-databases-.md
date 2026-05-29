@@ -6,7 +6,6 @@ tags:
 - python
 - database
 - terminal
-- tui
 description: A user friendly TUI for SQL databases. Written in python. Supports SQL
   server, Mysql, PostreSQL, SQLite, Turso and more. - Maxteabag/sqlit
 date: '2025-12-18'

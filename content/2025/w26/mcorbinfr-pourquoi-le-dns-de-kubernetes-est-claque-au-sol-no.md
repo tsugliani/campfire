@@ -4,7 +4,7 @@ title: '(mcorbin.fr): Pourquoi le DNS de Kubernetes est claqué au sol (notammen
 url_link: https://mcorbin.fr/posts/2025-06-24-dns-k8s-sol/
 tags:
 - kubernetes
-- dns
+- networking
 - devops
 - troubleshooting
 description: Dans cet article, j’expose 3 problèmes que j’ai rencontré dans ma carrière

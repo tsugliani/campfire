@@ -5,7 +5,6 @@ tags:
 - vmware
 - monitoring
 - homelab
-- datadog
 description: Installer Datadog sur un homelab vSphere peut sembler contre-intuitif
   à cause du coût habituel de la plateforme, mais cela présente des avantages réels
   en termes de gain de temps et de fonctionnali…

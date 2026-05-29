@@ -6,7 +6,7 @@ tags:
 - vmware
 - vcf
 - dsm
-- sqlserver
+- database
 description: a very powerful solution for customers who wish to offer data services
   to their users, all the while maintaining multi-tenancy controls through VCF Automation
 date: '2026-05-19'

@@ -6,7 +6,7 @@ tags:
 - ai
 - development
 - automation
-- prompts
+- prompt
 description: Claude Code is the most delightful AI agent/workflow I have used so far.  Not
   only does it make targeted edits or vibe coding throwaway tools less annoying, ...
 date: '2025-08-24'

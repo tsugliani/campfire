@@ -4,7 +4,7 @@ url_link: https://fx.wtf/
 tags:
 - terminal
 - json
-- go
+- golang
 - cli
 description: A terminal viewer & processor for JSON, YAML, & TOML (TUI and CLI)
 date: '2025-07-03'

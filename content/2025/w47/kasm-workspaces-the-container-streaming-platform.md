@@ -5,7 +5,7 @@ tags:
 - web
 - containers
 - security
-- remoteaccess
+- networking
 description: Kasm Workspaces delivers zero-trust remote browser isolation, Desktop
   as a Service (DaaS), and OSINT workloads to your web browser.
 date: '2025-11-17'

@@ -5,7 +5,6 @@ tags:
 - vmware
 - kubernetes
 - storage
-- volumes
 description: In this post, I will show you the steps to create a static volume via
   the Volume Service, and then create the appropriate manifests in your VKS cluster
   to make the volume available to Pods running on your cluster.

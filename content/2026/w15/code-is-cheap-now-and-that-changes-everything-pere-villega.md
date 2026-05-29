@@ -3,7 +3,7 @@ title: Code Is Cheap Now, And That Changes Everything | Pere Villega
 url_link: https://perevillega.com/posts/2026-03-16-code-is-cheap-now/
 tags:
 - ai
-- software-engineering
+- development
 - productivity
 - opinion
 description: AI coding agents have made code production nearly free. Drawing on insights

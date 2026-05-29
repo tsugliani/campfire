@@ -4,7 +4,6 @@ url_link: https://jpmens.net/2026/04/03/ssh-certificates-the-better-ssh-experien
 tags:
 - ssh
 - security
-- certificates
 - automation
 description: When Isshinto a server for the first time, I’m confronted with a dialog
   which asks me to verify I’m actually talking to the machine I expect to be talking

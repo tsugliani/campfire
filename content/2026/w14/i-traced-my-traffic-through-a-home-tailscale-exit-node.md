@@ -5,7 +5,7 @@ tags:
 - tailscale
 - networking
 - homelab
-- vpn
+- security
 description: 'A practical deep dive into Tailscale exit nodes: route changes, traceroute
   evidence, DERP fallback, trust boundaries, and why this model can be free.'
 date: '2026-04-01'

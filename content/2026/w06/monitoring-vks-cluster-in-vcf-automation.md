@@ -2,7 +2,7 @@
 title: Monitoring VKS Cluster in VCF Automation
 url_link: https://fojta.wordpress.com/2026/02/03/monitoring-vks-cluster-in-vcf-automation/
 tags:
-- vks
+- kubernetes
 - vcf
 - automation
 - monitoring

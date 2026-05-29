@@ -3,7 +3,7 @@ title: devenv
 url_link: https://devenv.sh/
 tags:
 - development
-- nix
+- linux
 - automation
 - containers
 description: Fast, Declarative, Reproducible, and Composable Developer Environments

@@ -6,7 +6,7 @@ tags:
 - vmware
 - homelab
 - vcf
-- deployment
+- devops
 description: With the announcement of VMware vSphere Foundation (VVF) and VMware Cloud
   Foundation (VCF) 9.1, I know many of you are eager to start planning for 9.1 and
   get it into your lab environment for hands…

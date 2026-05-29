@@ -5,7 +5,7 @@ tags:
 - ai
 - development
 - thinking
-- prompts
+- prompt
 description: Everyone is trying to go faster, running more agents to run more agents,
   to open more pull requests to orchestrator agents to then get reviewed by another
   fl...

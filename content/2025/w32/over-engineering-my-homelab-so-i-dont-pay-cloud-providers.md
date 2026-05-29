@@ -5,7 +5,6 @@ tags:
 - homelab
 - proxmox
 - automation
-- ansible
 description: After years of self-hosting on a VPS in a datacenter, I’ve decided to
   move my services at home. But instead of just porting services, I’m using this as
   an opportunity to migrate to a more flexible and

@@ -5,7 +5,7 @@ tags:
 - vmware
 - kubernetes
 - automation
-- deployment
+- devops
 description: Introduction to the deploy.sh Script The deploy.sh script is a fundamental
   tool in the VMware Aria Automation ecosystem (formerly vRealize Automation), responsible
   for deploying, configuring, and managing all components of this advanced environment.

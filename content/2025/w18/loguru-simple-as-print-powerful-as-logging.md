@@ -3,7 +3,7 @@ title: 'Loguru: Simple as Print, Powerful as Logging'
 url_link: https://codecut.ai/simplify-your-python-logging-with-loguru/
 tags:
 - python
-- logging
+- monitoring
 - data
 - science
 description: Manage your data science projects effectively with loguru. Track stages

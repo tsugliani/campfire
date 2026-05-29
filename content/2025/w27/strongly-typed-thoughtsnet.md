@@ -4,7 +4,6 @@ url_link: https://strongly-typed-thoughts.net/blog/zig-2025
 tags:
 - zig
 - development
-- programming
 - language
 description: 'Ah,Zig. I have a love-hate relationship with this one. A “new” (reading:appeared
   a couple years ago,

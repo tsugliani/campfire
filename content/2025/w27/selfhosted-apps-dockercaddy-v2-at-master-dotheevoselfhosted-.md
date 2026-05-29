@@ -3,7 +3,7 @@ title: selfhosted-apps-docker/caddy_v2 at master · DoTheEvo/selfhosted-apps-doc
 url_link: https://github.com/DoTheEvo/selfhosted-apps-docker/tree/master/caddy_v2
 tags:
 - docker
-- caddy
+- web
 - reverseproxy
 - homelab
 description: Guide by Example. Contribute to DoTheEvo/selfhosted-apps-docker development

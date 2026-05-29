@@ -5,7 +5,6 @@ tags:
 - zsh
 - terminal
 - performance
-- optimization
 description: 'Super quick one I want to document here! I got myself on a side quest,
 
   again! No biggie, my ZSH shell was taking ages to load. When I say

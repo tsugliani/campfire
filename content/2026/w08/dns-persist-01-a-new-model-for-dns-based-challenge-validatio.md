@@ -2,8 +2,7 @@
 title: 'DNS-PERSIST-01: A New Model for DNS-based Challenge Validation'
 url_link: https://letsencrypt.org/2026/02/18/dns-persist-01
 tags:
-- dns
-- acme
+- networking
 - security
 - automation
 description: 'When you request a certificate from Let’s Encrypt, our servers validate

@@ -5,7 +5,7 @@ tags:
 - macos
 - monitoring
 - system
-- cpu
+- hardware
 description: macOS system monitor in your menu bar. Contribute to exelban/stats development
   by creating an account on GitHub.
 date: '2025-07-03'

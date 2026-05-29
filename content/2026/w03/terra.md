@@ -2,10 +2,10 @@
 title: Terra
 url_link: https://terra.fyralabs.com/
 tags:
-- fedora
+- linux
 - rust
-- packages
-- community
+- package
+- opensource
 description: Terra is the community Fedora repository which makes it easy to install
   and maintain software packages.
 date: '2026-01-15'

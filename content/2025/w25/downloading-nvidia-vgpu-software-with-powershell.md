@@ -2,8 +2,8 @@
 title: Downloading NVIDIA vGPU software with PowerShell
 url_link: https://blog.graa.dev/PowerShell-NVIDIASoftware
 tags:
-- powershell
-- nvidia
+- windows
+- hardware
 - api
 - automation
 description: Having the latest compatible software for one’s NVIDIA vGPU investment

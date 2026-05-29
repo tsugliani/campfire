@@ -5,7 +5,7 @@ tags:
 - linux
 - kernel
 - init
-- riscv
+- hardware
 description: A guide on building a simple Linux distribution from scratch. Detailed
   guide on building the kernel and the init process. Finally, a little distribution
   is built with u-root that is capable of connecting to the Internet.
