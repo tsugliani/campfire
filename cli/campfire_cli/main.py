@@ -1316,6 +1316,26 @@ Return ONLY a comma-separated list. Nothing else."""
 
 
 
+def _fetch_via_wayback(url: str) -> httpx.Response | None:
+    """Fetch an archived snapshot of url from the Wayback Machine, for sites that
+    block live scraping (e.g. Cloudflare bot management) but allow archived reads."""
+    try:
+        avail = httpx.get(
+            "https://archive.org/wayback/available",
+            params={"url": url},
+            timeout=10.0,
+        )
+        avail.raise_for_status()
+        snapshot = avail.json().get("archived_snapshots", {}).get("closest")
+        if not snapshot or snapshot.get("status") != "200":
+            return None
+        resp = httpx.get(snapshot["url"], follow_redirects=True, timeout=10.0, headers=HTTP_HEADERS)
+        resp.raise_for_status()
+        return resp
+    except (httpx.HTTPError, ValueError):
+        return None
+
+
 def fetch_metadata(url: str) -> dict:
     """Fetch URL and extract title, description, tags."""
     # Twitter/X-specific: use oEmbed API (site blocks scrapers)
@@ -1325,7 +1345,7 @@ def fetch_metadata(url: str) -> dict:
         if tw:
             existing_tags = get_existing_tags()
             tags = suggest_tags_with_llm(tw["title"], tw["description"], tw["description"], existing_tags)
-            return {"title": tw["title"], "description": tw["description"], "tags": tags, "_soup": None}
+            return {"title": tw["title"], "description": tw["description"], "tags": tags, "_soup": None, "_source": "SUCCESS (X)"}
         console.print("[yellow]Could not fetch X metadata, falling back to generic fetch.[/yellow]")
 
     # YouTube-specific: use oEmbed + scrape for accurate video metadata
@@ -1337,9 +1357,10 @@ def fetch_metadata(url: str) -> dict:
             page_text = soup.get_text(separator=" ", strip=True) if soup else ""
             existing_tags = get_existing_tags()
             tags = suggest_tags_with_llm(yt["title"], yt["description"], page_text, existing_tags)
-            return {"title": yt["title"], "description": yt["description"], "tags": tags, "_soup": soup}
+            return {"title": yt["title"], "description": yt["description"], "tags": tags, "_soup": soup, "_source": "SUCCESS (YouTube)"}
         console.print("[yellow]Could not fetch YouTube metadata, falling back to generic fetch.[/yellow]")
 
+    source = "generic"
     with console.status(f"Fetching [cyan]{url}[/cyan]..."):
         try:
             resp = httpx.get(url, follow_redirects=True, timeout=10.0, headers=HTTP_HEADERS)
@@ -1347,26 +1368,37 @@ def fetch_metadata(url: str) -> dict:
         except httpx.TimeoutException:
             console.print(f"[yellow]Timed out fetching {url}[/yellow]")
             console.print("The site took too long to respond. You can enter metadata manually.\n")
-            return {"title": "", "description": "", "tags": [], "_soup": None}
+            return {"title": "", "description": "", "tags": [], "_soup": None, "_source": "FAIL (timeout)"}
         except httpx.HTTPStatusError as e:
             code = e.response.status_code
-            reasons = {
-                403: "The site is blocking automated requests (common with Cloudflare-protected sites like Medium).",
-                404: "The page was not found — check if the URL is correct.",
-                429: "Too many requests — the site is rate-limiting. Try again later.",
-                451: "The content is unavailable for legal reasons.",
-                500: "The site is experiencing a server error.",
-                502: "Bad gateway — the site's server is unreachable.",
-                503: "The site is temporarily unavailable.",
-            }
-            reason = reasons.get(code, f"The server returned an error.")
-            console.print(f"[yellow]HTTP {code} fetching {url}[/yellow]")
-            console.print(f"{reason} You can enter metadata manually.\n")
-            return {"title": "", "description": "", "tags": [], "_soup": None}
+            if code == 403:
+                console.print(f"[yellow]HTTP 403 fetching {url}[/yellow]")
+                console.print("The site is blocking automated requests. Trying Wayback Machine archive...")
+                archived = _fetch_via_wayback(url)
+                if archived is not None:
+                    resp = archived
+                    source = "Wayback (403 block)"
+                    console.print("[green]Fetched metadata from an archived snapshot.[/green]\n")
+                else:
+                    console.print("No archived snapshot available. You can enter metadata manually.\n")
+                    return {"title": "", "description": "", "tags": [], "_soup": None, "_source": "FAIL (403 block)"}
+            else:
+                reasons = {
+                    404: "The page was not found — check if the URL is correct.",
+                    429: "Too many requests — the site is rate-limiting. Try again later.",
+                    451: "The content is unavailable for legal reasons.",
+                    500: "The site is experiencing a server error.",
+                    502: "Bad gateway — the site's server is unreachable.",
+                    503: "The site is temporarily unavailable.",
+                }
+                reason = reasons.get(code, f"The server returned an error.")
+                console.print(f"[yellow]HTTP {code} fetching {url}[/yellow]")
+                console.print(f"{reason} You can enter metadata manually.\n")
+                return {"title": "", "description": "", "tags": [], "_soup": None, "_source": f"FAIL (HTTP {code})"}
         except httpx.HTTPError as e:
             console.print(f"[yellow]Failed to fetch {url}:[/yellow] {e}")
             console.print("You can enter metadata manually.\n")
-            return {"title": "", "description": "", "tags": [], "_soup": None}
+            return {"title": "", "description": "", "tags": [], "_soup": None, "_source": "FAIL (network error)"}
 
     soup = BeautifulSoup(resp.text, "html.parser")
 
@@ -1374,8 +1406,16 @@ def fetch_metadata(url: str) -> dict:
     title_tag = soup.find("title")
     if title_tag and title_tag.string and "just a moment" in title_tag.string.lower():
         console.print(f"[yellow]Cloudflare challenge detected for {url}[/yellow]")
-        console.print("The site is blocking automated access. You can enter metadata manually.\n")
-        return {"title": "", "description": "", "tags": [], "_soup": None}
+        console.print("Trying Wayback Machine archive...")
+        archived = _fetch_via_wayback(url)
+        if archived is not None:
+            resp = archived
+            soup = BeautifulSoup(resp.text, "html.parser")
+            source = "Wayback (Cloudflare challenge)"
+            console.print("[green]Fetched metadata from an archived snapshot.[/green]\n")
+        else:
+            console.print("No archived snapshot available. You can enter metadata manually.\n")
+            return {"title": "", "description": "", "tags": [], "_soup": None, "_source": "FAIL (Cloudflare challenge)"}
 
     # Title
     title = ""
@@ -1391,6 +1431,8 @@ def fetch_metadata(url: str) -> dict:
     gh_slug = _github_repo_slug(url)
     if gh_slug:
         title = f"GitHub - {gh_slug}"
+        if source == "generic":
+            source = "GitHub"
 
     # Description
     description = ""
@@ -1413,7 +1455,7 @@ def fetch_metadata(url: str) -> dict:
     # Tags: always use LLM for consistent tagging
     tags = suggest_tags_with_llm(title, description, page_text, existing_tags)
 
-    return {"title": title, "description": description, "tags": tags, "_soup": soup}
+    return {"title": title, "description": description, "tags": tags, "_soup": soup, "_source": f"SUCCESS ({source})"}
 
 
 def _detect_email() -> str | None:
@@ -2495,7 +2537,7 @@ def queue_add(
 
 @queue_app.command(name="list")
 def queue_list() -> None:
-    """Show the current queue."""
+    """Show the current queue, enriched with title/tags/fetch status for done jobs."""
     jobs = _queue_read()
     if not jobs:
         console.print("[dim]Queue is empty.[/dim]")
@@ -2504,10 +2546,25 @@ def queue_list() -> None:
     table.add_column("#", justify="right", style="dim")
     table.add_column("Status")
     table.add_column("URL")
-    style = {"pending": "yellow", "done": "green", "failed": "red"}
+    table.add_column("Title")
+    table.add_column("Tags", style="green")
+    table.add_column("Fetch status")
+    style = {"pending": "yellow", "done": "green", "failed": "red", "deleted": "dim"}
     for i, j in enumerate(jobs, 1):
         st = j.get("status", "pending")
-        table.add_row(str(i), f"[{style.get(st, 'white')}]{st}[/]", j.get("url", ""))
+        title = tags = ""
+        fetch_status = j.get("fetch_status", "")
+        if st == "done" and j.get("permalink"):
+            found = _find_link_by_permalink(j["permalink"])
+            if found:
+                _md, fm, _slug = found
+                title = (fm.get("title") or "")[:60]
+                tags = ", ".join(fm.get("tags") or [])
+        fetch_style = "red" if fetch_status.startswith("FAIL") else "green" if fetch_status.startswith("SUCCESS") else "dim"
+        table.add_row(
+            str(i), f"[{style.get(st, 'white')}]{st}[/]", j.get("url", ""),
+            title, tags, f"[{fetch_style}]{fetch_status}[/]" if fetch_status else "",
+        )
     console.print(table)
 
 
@@ -2531,6 +2588,7 @@ def queue_process(
     week: int | None = typer.Option(None, "--week", "-w", help="Week number (default: current)"),
     year: int | None = typer.Option(None, "--year", "-y", help="Year (default: current)"),
     retry_failed: bool = typer.Option(False, "--retry-failed", help="Also retry jobs previously marked failed"),
+    reprocess: bool = typer.Option(False, "--reprocess", help="Reprocess ALL queued jobs regardless of status (pending, done, failed)"),
     no_build: bool = typer.Option(False, "--no-build", help="Skip the final Hugo rebuild"),
 ) -> None:
     """Fetch metadata + screenshots for all pending jobs, then rebuild once."""
@@ -2539,8 +2597,11 @@ def queue_process(
     week = week or default_week
 
     jobs = _queue_read()
-    statuses = {"pending"} | ({"failed"} if retry_failed else set())
-    todo = [j for j in jobs if j.get("status") in statuses]
+    if reprocess:
+        todo = list(jobs)
+    else:
+        statuses = {"pending"} | ({"failed"} if retry_failed else set())
+        todo = [j for j in jobs if j.get("status") in statuses]
     if not todo:
         console.print("[dim]Nothing to process.[/dim]")
         return
@@ -2551,6 +2612,15 @@ def queue_process(
         url = job["url"]
         console.print(f"[bold][{i}/{len(todo)}][/bold] {url}")
         try:
+            # Reprocessing a job that already has a file: remove the old
+            # .md/screenshots first, since a new title can change the slug
+            # and _finalize_link would otherwise leave the old one orphaned.
+            if job.get("permalink"):
+                found = _find_link_by_permalink(job["permalink"])
+                if found:
+                    old_md, _old_fm, old_slug = found
+                    _delete_link_files(old_md, old_slug)
+
             meta = fetch_metadata(url)
             title = meta["title"] or url
             fp = _finalize_link(
@@ -2563,10 +2633,12 @@ def queue_process(
             # date moved it to another week) so `queue review` can find it.
             job["permalink"] = str(fp.relative_to(content_dir()).with_suffix(""))
             job["status"] = "done"
+            job["fetch_status"] = meta.get("_source", "SUCCESS (generic)")
             ok += 1
         except Exception as e:  # keep the batch going; record the failure
             job["status"] = "failed"
             job["error"] = str(e)
+            job["fetch_status"] = f"FAIL (exception: {e})"
             fail += 1
             console.print(f"  [red]Failed:[/red] {e}")
         _queue_write(jobs)  # persist after each job so the queue is resumable
@@ -2590,12 +2662,18 @@ def _print_batch_summary(jobs: list[dict]) -> None:
     table.add_column("Permalink", style="cyan", no_wrap=True)
     table.add_column("Title")
     table.add_column("Tags", style="green")
+    table.add_column("Status")
     for j in done:
         found = _find_link_by_permalink(j["permalink"])
         if not found:
             continue
         _md, fm, _slug = found
-        table.add_row(j["permalink"], (fm.get("title") or "")[:60], ", ".join(fm.get("tags") or []))
+        status = j.get("fetch_status", "—")
+        status_style = "red" if status.startswith("FAIL") else "green" if status.startswith("SUCCESS") else "dim"
+        table.add_row(
+            j["permalink"], (fm.get("title") or "")[:60], ", ".join(fm.get("tags") or []),
+            f"[{status_style}]{status}[/]",
+        )
     console.print("")
     console.print(table)
 
@@ -2645,7 +2723,9 @@ def queue_review(
     """Step through the processed batch to validate/fix title, description, tags.
 
     For each link: keep (Enter), edit fields, retag via LLM, recapture the
-    screenshot, or delete. One Hugo rebuild at the end if anything changed.
+    screenshot, reprocess (re-fetch title/description/tags/screenshot from
+    scratch — handy when tagging failed, e.g. a slow local LLM), or delete.
+    One Hugo rebuild at the end if anything changed.
     """
     jobs = _queue_read()
     done = [j for j in jobs if j.get("status") == "done" and j.get("permalink")]
@@ -2666,8 +2746,8 @@ def queue_review(
         console.print(f"\n[bold dim]({idx}/{len(done)})[/bold dim]")
         _print_review_card(fm, job["permalink"], slug)
         action = Prompt.ask(
-            "Action (k=keep, e=edit, t=retag, s=screenshot, d=delete, q=quit)",
-            choices=["k", "e", "t", "s", "d", "q"], default="k",
+            "Action (k=keep, e=edit, t=retag, s=screenshot, r=reprocess, d=delete, q=quit)",
+            choices=["k", "e", "t", "s", "r", "d", "q"], default="k",
         )
 
         if action == "q":
@@ -2697,6 +2777,35 @@ def queue_review(
             capture_screenshot(fm.get("url_link", ""), slug, title=fm.get("title", ""),
                                description=fm.get("description", ""), tags=fm.get("tags") or [])
             changed = True
+            continue
+
+        if action == "r":
+            url = fm.get("url_link", "")
+            meta = fetch_metadata(url)
+            source = meta.get("_source", "—")
+            style = "red" if source.startswith("FAIL") else "green"
+            console.print(f"Fetch status: [{style}]{source}[/]")
+
+            if meta.get("title"):
+                fm["title"] = meta["title"]
+            if meta.get("description"):
+                fm["description"] = meta["description"]
+            if meta.get("tags"):
+                fm["tags"] = meta["tags"]
+
+            new_slug = slugify(fm["title"])
+            if new_slug and new_slug != slug:
+                md = _rename_link(md, slug, new_slug)
+                job["permalink"] = str(md.relative_to(content_dir()).with_suffix(""))
+                slug = new_slug
+            write_front_matter(md, fm, "")
+            capture_screenshot(url, slug, soup=meta.get("_soup"), title=fm["title"],
+                               description=fm["description"], tags=fm.get("tags") or [])
+
+            job["fetch_status"] = source
+            _queue_write(jobs)
+            changed = True
+            console.print("[green]Reprocessed.[/green]")
             continue
 
         if action == "e":
