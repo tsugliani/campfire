@@ -610,6 +610,8 @@ def _fetch_twitter_metadata(url: str) -> dict | None:
             author = data.get("author", {})
             name = author.get("name", username)
             screen_name = author.get("screen_name", username)
+            avatar_url = author.get("avatar_url")
+            verified = bool((author.get("verification") or {}).get("verified"))
             text = data.get("text", "").strip()
 
             # Check for article (X long-form posts)
@@ -646,27 +648,21 @@ def _fetch_twitter_metadata(url: str) -> dict | None:
                 except Exception:
                     pass
 
-            return {"title": title, "description": description, "image_url": image_url, "date": tweet_date}
+            return {
+                "title": title, "description": description, "image_url": image_url, "date": tweet_date,
+                "text": text, "name": name, "screen_name": screen_name, "avatar_url": avatar_url,
+                "verified": verified,
+                "replies": data.get("replies", 0), "retweets": data.get("retweets", 0),
+                "likes": data.get("likes", 0),
+            }
         except Exception:
             pass
 
     return {"title": f"@{username} on X",
             "description": f"Post by @{username}" if is_tweet else f"@{username}'s profile on X",
-            "image_url": None, "date": None}
-
-
-def _fetch_twitter_image(url: str) -> bytes | None:
-    """Fetch the image from a tweet if available."""
-    meta = _fetch_twitter_metadata(url)
-    if not meta or not meta.get("image_url"):
-        return None
-    try:
-        resp = httpx.get(meta["image_url"], follow_redirects=True, timeout=10.0)
-        if resp.status_code == 200 and resp.headers.get("content-type", "").startswith("image"):
-            return resp.content
-    except Exception:
-        pass
-    return None
+            "image_url": None, "date": None,
+            "text": "", "name": username, "screen_name": username, "avatar_url": None,
+            "verified": False, "replies": 0, "retweets": 0, "likes": 0}
 
 
 def _is_youtube_url(url: str) -> bool:
@@ -918,8 +914,294 @@ def _generate_card_image(title: str, domain: str, description: str, tags: list[s
     return buf.getvalue()
 
 
+def _fetch_avatar_image(avatar_url: str):
+    """Download an avatar image for embedding in a tweet card, if reachable."""
+    from PIL import Image
+    from io import BytesIO
+    try:
+        resp = httpx.get(avatar_url, follow_redirects=True, timeout=10.0)
+        if resp.status_code == 200 and resp.headers.get("content-type", "").startswith("image"):
+            return Image.open(BytesIO(resp.content)).convert("RGBA")
+    except Exception:
+        pass
+    return None
+
+
+# Matches a single emoji grapheme cluster: flag pairs, keycap sequences, or a
+# base emoji with optional skin-tone modifier / variation selector / ZWJ chain.
+_EMOJI_TOKEN_RE = re.compile(
+    "(?:"
+    "[\U0001F1E6-\U0001F1FF]{2}"
+    "|[#*0-9]\uFE0F?\u20E3"
+    "|[\U0001F000-\U0001FFFF\U00002600-\U000027BF\U00002190-\U000021FF\U00002B00-\U00002BFF]"
+    "[\U0001F3FB-\U0001F3FF]?\uFE0F?"
+    "(?:\u200D[\U0001F000-\U0001FFFF\U00002600-\U000027BF]\uFE0F?)*"
+    ")"
+)
+
+_TWEMOJI_CACHE_DIR = Path.home() / ".cache" / "campfire-cli" / "twemoji"
+
+
+def _fetch_twemoji_image(cluster: str):
+    """Return a cached Twemoji PNG for an emoji cluster, downloading it on first use.
+
+    Twemoji is the glyph set X itself renders emoji with, so this is what makes
+    the rendered card's emoji match how the tweet actually looks on X.
+    """
+    from PIL import Image
+    from io import BytesIO
+
+    codepoints = [format(ord(ch), "x") for ch in cluster]
+    candidates = ["-".join(codepoints)]
+    stripped = [cp for cp in codepoints if cp != "fe0f"]
+    if stripped and stripped != codepoints:
+        candidates.append("-".join(stripped))
+
+    _TWEMOJI_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    for name in candidates:
+        cache_path = _TWEMOJI_CACHE_DIR / f"{name}.png"
+        if cache_path.exists():
+            try:
+                return Image.open(cache_path).convert("RGBA")
+            except Exception:
+                continue
+        try:
+            resp = httpx.get(
+                f"https://cdn.jsdelivr.net/gh/jdecked/twemoji@latest/assets/72x72/{name}.png",
+                timeout=5.0,
+            )
+            if resp.status_code == 200 and resp.headers.get("content-type", "").startswith("image"):
+                cache_path.write_bytes(resp.content)
+                return Image.open(BytesIO(resp.content)).convert("RGBA")
+        except Exception:
+            continue
+    return None
+
+
+def _generate_tweet_card_image(meta: dict) -> bytes:
+    """Render a tweet-styled preview card (avatar, name, handle, full text, stats)
+    with Pillow, matching how the tweet actually looks on X.
+
+    Used when a tweet has no photo/video to fall back on, so the card still
+    reads as an embedded tweet rather than a generic domain card. The full,
+    untruncated tweet text is rendered (canvas height grows to fit), and emoji
+    are drawn as Twemoji images since DejaVuSans has no color-emoji glyphs.
+    """
+    from PIL import Image, ImageDraw, ImageFont
+    from io import BytesIO
+
+    W = 1280
+    # Catppuccin Mocha colors, matching _generate_card_image
+    bg = (30, 30, 46)
+    text_color = (205, 214, 244)
+    subtext = (166, 173, 200)
+    accent = (180, 190, 254)  # lavender, used for links/hashtags/mentions
+    sapphire = (137, 220, 235)
+    mauve = (203, 166, 247)
+
+    try:
+        font_name = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 30)
+        font_handle = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 24)
+        font_text = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 32)
+        font_stats = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 22)
+        font_logo = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 36)
+        font_check = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 20)
+    except OSError:
+        font_name = ImageFont.load_default(30)
+        font_handle = ImageFont.load_default(24)
+        font_text = ImageFont.load_default(32)
+        font_stats = ImageFont.load_default(22)
+        font_logo = ImageFont.load_default(36)
+        font_check = ImageFont.load_default(20)
+
+    pad = 60
+    avatar_size = 88
+    emoji_size = 34
+    line_height = 44
+    max_w = W - 2 * pad
+
+    # Measurement pass: textbbox is font-metric based and doesn't depend on
+    # canvas size, so a throwaway 1x1 context is enough to compute wrapping
+    # and the final canvas height before the real image is created.
+    meas = ImageDraw.Draw(Image.new("RGB", (1, 1)))
+
+    def _tokenize_word(word):
+        tokens, last = [], 0
+        for m in _EMOJI_TOKEN_RE.finditer(word):
+            if m.start() > last:
+                tokens.append(("text", word[last:m.start()]))
+            tokens.append(("emoji", m.group(0)))
+            last = m.end()
+        if last < len(word):
+            tokens.append(("text", word[last:]))
+        return tokens or [("text", word)]
+
+    def _word_width(word):
+        w = 0
+        for kind, s in _tokenize_word(word):
+            if kind == "emoji":
+                w += emoji_size + 4
+            elif s:
+                w += meas.textbbox((0, 0), s, font=font_text)[2]
+        return w
+
+    def _is_link_like(word):
+        stripped = word.lstrip("(\u201c\"'")
+        return stripped.startswith(("#", "@", "http://", "https://"))
+
+    def _truncate_word(word, max_width):
+        # Only reached for a single pathologically long token (e.g. a bare URL)
+        while word and meas.textbbox((0, 0), word + "\u2026", font=font_text)[2] > max_width:
+            word = word[:-1]
+        return word + "\u2026" if word else word
+
+    space_w = meas.textbbox((0, 0), " ", font=font_text)[2]
+
+    def _wrap(text):
+        lines = []
+        for paragraph in text.split("\n"):
+            words = [w for w in paragraph.split(" ") if w]
+            line, line_w = [], 0
+            for w in words:
+                ww = _word_width(w)
+                if ww > max_w:
+                    w = _truncate_word(w, max_w)
+                    ww = _word_width(w)
+                sep = space_w if line else 0
+                if line_w + sep + ww > max_w and line:
+                    lines.append(line)
+                    line, line_w = [w], ww
+                else:
+                    line.append(w)
+                    line_w += sep + ww
+            lines.append(line)
+        return lines
+
+    tweet_text = re.sub(r"[ \t]+", " ", (meta.get("text") or "")).strip()
+    lines = _wrap(tweet_text)
+
+    # Canvas height is derived from the actual (untruncated) tweet length
+    header_h = pad + avatar_size + 36
+    footer_h = 30 + 60 + pad  # divider gap + stats row + bottom padding
+    H = max(header_h + len(lines) * line_height + footer_h, 480)
+
+    img = Image.new("RGB", (W, H), bg)
+    draw = ImageDraw.Draw(img)
+
+    # X logo, top-right
+    draw.text((W - pad - 30, pad - 8), "\U0001D54F", fill=text_color, font=font_logo)
+
+    # Avatar (circular), top-left
+    ax, ay = pad, pad
+    avatar_img = _fetch_avatar_image(meta["avatar_url"]) if meta.get("avatar_url") else None
+    if avatar_img:
+        avatar_img = avatar_img.resize((avatar_size, avatar_size))
+        mask = Image.new("L", (avatar_size, avatar_size), 0)
+        ImageDraw.Draw(mask).ellipse((0, 0, avatar_size, avatar_size), fill=255)
+        img.paste(avatar_img, (ax, ay), mask)
+    else:
+        draw.ellipse((ax, ay, ax + avatar_size, ay + avatar_size), fill=accent)
+        initial = (meta.get("name") or meta.get("screen_name") or "?")[0].upper()
+        bbox = draw.textbbox((0, 0), initial, font=font_name)
+        iw, ih = bbox[2] - bbox[0], bbox[3] - bbox[1]
+        draw.text(
+            (ax + avatar_size / 2 - iw / 2, ay + avatar_size / 2 - ih / 2 - bbox[1]),
+            initial, fill=bg, font=font_name,
+        )
+
+    # Name + verified badge + handle, right of avatar
+    name_x = ax + avatar_size + 24
+    name_y = ay + 4
+    name = meta.get("name") or meta.get("screen_name") or "Unknown"
+    draw.text((name_x, name_y), name, fill=text_color, font=font_name)
+    name_w = draw.textbbox((0, 0), name, font=font_name)[2]
+    if meta.get("verified"):
+        cx, cy = name_x + name_w + 16, name_y + 14
+        draw.ellipse((cx, cy - 14, cx + 28, cy + 14), fill=sapphire)
+        draw.text((cx + 7, cy - 12), "\u2713", fill=bg, font=font_check)
+    draw.text((name_x, name_y + 40), f"@{meta.get('screen_name', '')}", fill=subtext, font=font_handle)
+
+    # Tweet text: full, untruncated, with inline color emoji and X-blue links/tags
+    text_y = ay + avatar_size + 36
+    for line in lines:
+        x = pad
+        for wi, word in enumerate(line):
+            if wi > 0:
+                x += space_w
+            color = accent if _is_link_like(word) else text_color
+            for kind, s in _tokenize_word(word):
+                if kind == "emoji":
+                    em_img = _fetch_twemoji_image(s)
+                    if em_img:
+                        em_img = em_img.resize((emoji_size, emoji_size))
+                        img.paste(em_img, (int(x), int(text_y + 4)), em_img)
+                    x += emoji_size + 4
+                elif s:
+                    draw.text((x, text_y), s, fill=color, font=font_text)
+                    x += draw.textbbox((0, 0), s, font=font_text)[2]
+        text_y += line_height
+
+    # Divider + stats row near the bottom
+    stats_y = H - pad - 30
+    draw.line([(pad, stats_y - 24), (W - pad, stats_y - 24)], fill=(49, 50, 68), width=2)
+
+    stats_text = (
+        f"{meta.get('replies', 0)}  Replies     "
+        f"{meta.get('retweets', 0)}  Reposts     "
+        f"{meta.get('likes', 0)}  Likes"
+    )
+    draw.text((pad, stats_y), stats_text, fill=subtext, font=font_stats)
+
+    if meta.get("date"):
+        date_str = meta["date"].strftime("%b %d, %Y")
+        dw = draw.textbbox((0, 0), date_str, font=font_stats)[2]
+        draw.text((W - pad - dw, stats_y), date_str, fill=subtext, font=font_stats)
+
+    # Bottom accent line, consistent with the generic card style
+    draw.rectangle([0, H - 4, W, H], fill=mauve)
+
+    buf = BytesIO()
+    img.save(buf, format="PNG", optimize=True)
+    return buf.getvalue()
+
 def _dismiss_cookie_banner(page) -> None:
-    """Try to dismiss cookie consent banners using multiple strategies."""
+    """Try to dismiss cookie consent banners using multiple strategies.
+
+    Some consent widgets (e.g. GitHub's <ghcc-consent> custom element) mount
+    asynchronously, so this retries briefly rather than checking only once.
+    The extra budget is kept short since most pages have no banner at all.
+    """
+    deadline = time.monotonic() + 2.0
+    while True:
+        if _try_dismiss_cookie_banner_once(page):
+            return
+        if time.monotonic() >= deadline:
+            return
+        page.wait_for_timeout(400)
+
+
+def _try_dismiss_cookie_banner_once(page) -> bool:
+    """Single pass of cookie-banner dismissal. Returns True if it clicked something."""
+    # Strategy 0: a dialog-scoped close/dismiss icon. This is the most broadly
+    # applicable and side-effect-free option (it doesn't record any consent
+    # choice), and unlike accept/reject buttons it's rarely delay-disabled —
+    # e.g. GitHub's consent dialog disables "Save changes"/"Reset all" for a
+    # beat (to prevent instant-dismiss dark patterns) but its "Close" (X) icon
+    # is enabled immediately.
+    try:
+        for dialog in page.query_selector_all('[role="dialog"], [role="alertdialog"]'):
+            if not dialog.is_visible():
+                continue
+            close_btn = dialog.query_selector(
+                'button[aria-label*="close" i], button[aria-label*="dismiss" i]'
+            )
+            if close_btn and close_btn.is_visible() and close_btn.is_enabled():
+                close_btn.click(timeout=1000)
+                page.wait_for_timeout(300)
+                return True
+    except Exception:
+        pass
+
     # Strategy 1: Known banner button selectors (most reliable)
     known_buttons = [
         "#onetrust-accept-btn-handler",
@@ -939,10 +1221,10 @@ def _dismiss_cookie_banner(page) -> None:
     for sel in known_buttons:
         try:
             btn = page.query_selector(sel)
-            if btn and btn.is_visible():
-                btn.click()
+            if btn and btn.is_visible() and btn.is_enabled():
+                btn.click(timeout=1000)
                 page.wait_for_timeout(500)
-                return
+                return True
         except Exception:
             continue
 
@@ -951,16 +1233,26 @@ def _dismiss_cookie_banner(page) -> None:
         "Accept", "Accept All", "Allow All", "Agree", "Allow",
         "I Agree", "Got It", "OK", "Accept Cookies", "Allow Cookies",
         "Accepter", "Tout accepter", "J'accepte", "Autoriser",
+        # GitHub's <ghcc-consent> widget and similar custom consent managers
+        "Save changes", "Reject All", "Reject all", "Necessary only", "Decline",
     ]
     for text in accept_texts:
         try:
-            btn = page.get_by_role("button", name=text, exact=False)
-            if btn.count() > 0 and btn.first.is_visible():
-                btn.first.click()
+            # Anchored, whitespace-tolerant, case-insensitive whole-name match.
+            # A plain substring match (exact=False) is too loose here: e.g. "OK"
+            # would match GitHub's footer "Manage cookies" button (cookies
+            # contains "ok"), which *opens* the consent dialog instead of
+            # dismissing it.
+            pattern = re.compile(rf"^\s*{re.escape(text)}\s*$", re.IGNORECASE)
+            btn = page.get_by_role("button", name=pattern)
+            if btn.count() > 0 and btn.first.is_visible() and btn.first.is_enabled():
+                btn.first.click(timeout=1000)
                 page.wait_for_timeout(500)
-                return
+                return True
         except Exception:
             continue
+
+    return False
 
 
 def capture_screenshot(url: str, slug: str, soup: BeautifulSoup | None = None,
@@ -979,14 +1271,31 @@ def capture_screenshot(url: str, slug: str, soup: BeautifulSoup | None = None,
     # Check if site is accessible (skip to card on 403/Cloudflare/X)
     site_blocked = False
     if _is_twitter_url(url):
-        # Try to get tweet image first
-        with console.status(f"Fetching X post image for [cyan]{url}[/cyan]..."):
-            img_data = _fetch_twitter_image(url)
+        with console.status(f"Fetching X post data for [cyan]{url}[/cyan]..."):
+            tw_meta = _fetch_twitter_metadata(url) or {}
+
+        img_data = None
+        if tw_meta.get("image_url"):
+            try:
+                resp = httpx.get(tw_meta["image_url"], follow_redirects=True, timeout=10.0)
+                if resp.status_code == 200 and resp.headers.get("content-type", "").startswith("image"):
+                    img_data = resp.content
+            except Exception:
+                pass
         if img_data:
             out_path.write_bytes(img_data)
             console.print(f"[green]Tweet image saved:[/green] {out_path.relative_to(find_repo_root())}")
             return True
-        console.print(f"[dim]X/Twitter — no image, generating card...[/dim]")
+
+        # No photo/video on the tweet: render a tweet-styled card instead of a generic one
+        try:
+            with console.status("Rendering tweet card..."):
+                card_data = _generate_tweet_card_image(tw_meta)
+            out_path.write_bytes(card_data)
+            console.print(f"[green]Tweet card rendered:[/green] {out_path.relative_to(find_repo_root())}")
+            return True
+        except Exception as e:
+            console.print(f"[dim]Tweet card render failed ({e}), generating generic card...[/dim]")
         site_blocked = True
     else:
         try:
