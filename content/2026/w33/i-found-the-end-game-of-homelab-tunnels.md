@@ -4,8 +4,7 @@ url_link: https://www.youtube.com/watch?v=EpxzTDhIQzI
 tags:
 - homelab
 - networking
-description: "Neon is the backend for apps and agents: https://neon.plug.dev/r7tytFV\n\
-  ---\n\nI've probably tried close to 5 different options for access to my homelab\
+description: "I've probably tried close to 5 different options for access to my homelab\
   \ services. Whether public or private, SaaS or self-hosted, everything ended up\
   \ falling short. \nPangolin is different.\n\n⌨️ The keyboard on this video is the\
   \ Dygma Defy: http://dygma.com/DEVOPSTOOLBOX\n\U0001F3B9 Keycaps on my Defy are\
