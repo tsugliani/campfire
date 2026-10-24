@@ -370,8 +370,9 @@ class TestRequireAuthor:
 
     @patch("campfire_cli.main.Confirm.ask", return_value=False)
     @patch("campfire_cli.main.Prompt.ask", return_value="prompted")
+    @patch("campfire_cli.main.subprocess.run", return_value=MagicMock(returncode=1, stdout=""))
     @patch("campfire_cli.main.detect_author", return_value=None)
-    def test_prompt_fallback(self, mock_detect, mock_prompt, mock_confirm):
+    def test_prompt_fallback(self, mock_detect, mock_run, mock_prompt, mock_confirm):
         assert main.require_author(None) == "@prompted"
 
 
