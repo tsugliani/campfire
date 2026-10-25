@@ -88,6 +88,7 @@ Commands use Typer subgroups: `link_app` (single-link ops), `site_app` (site man
 - **YouTube**: oEmbed API for title, page scrape for description (from `attributedDescription` in JS data), `i.ytimg.com` for thumbnails, timestamp links converted to `&t=` URLs (supports both `01:43 - Topic` and `01:43 Topic` formats)
 - **X/Twitter**: fxtwitter API for metadata (title, description, article content, cover images, dates). Site blocks all scrapers.
 - **Cloudflare-protected sites**: Detected by page title ("Just a moment"), falls through to generated card
+- **Client-rendered sites (SPAs)**: `_is_spa_shell` flags a deep URL whose `og:url` points at the site root (the server sent the homepage shell). `_rerender_if_spa_shell` then re-fetches with Playwright and keeps the last meta tag per property (react-helmet appends route tags after the shell's). Applied in `fetch_metadata`, `_fetch_og_image` and `_fetch_page_text`
 - **Cookie banners**: Playwright dismisses known banners (OneTrust, CookieBot, Funding Choices, Blogspot, etc.) before screenshots
 
 ## LLM integration

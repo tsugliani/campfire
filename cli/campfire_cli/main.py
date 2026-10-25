@@ -770,6 +770,61 @@ def screenshots_dir() -> Path:
     return find_repo_root() / "static" / "screenshots"
 
 
+def _is_spa_shell(url: str, soup: BeautifulSoup) -> bool:
+    """True when a deep URL served the site's homepage metadata.
+
+    Client-rendered sites (React/Vite SPAs) return the same HTML shell for every
+    route, so a /blog/post URL comes back with og:url pointing at the site root
+    and the homepage title/description/og:image."""
+    og_url = soup.find("meta", property="og:url")
+    if not og_url or not og_url.get("content"):
+        return False
+    requested_path = urlparse(url).path.rstrip("/")
+    og_path = urlparse(og_url["content"]).path.rstrip("/")
+    return bool(requested_path) and not og_path
+
+
+def _render_page_soup(url: str) -> BeautifulSoup | None:
+    """Render a page with Playwright (runs its JavaScript) and parse the result."""
+    try:
+        from playwright.sync_api import sync_playwright
+        with console.status(f"Rendering [cyan]{url}[/cyan] (client-side site)..."):
+            with sync_playwright() as p:
+                browser = p.chromium.launch(args=["--no-sandbox", "--disable-setuid-sandbox"])
+                page = browser.new_page()
+                page.goto(url, wait_until="domcontentloaded", timeout=15000)
+                try:
+                    page.wait_for_load_state("networkidle", timeout=10000)
+                except Exception:
+                    pass
+                html = page.content()
+                browser.close()
+    except Exception as e:
+        console.print(f"[dim]Rendering failed ({e}), keeping static metadata.[/dim]")
+        return None
+    soup = BeautifulSoup(html, "html.parser")
+    # Head managers (react-helmet etc.) append route-specific tags after the
+    # static shell's: keep only the last tag for each property/name.
+    seen = set()
+    for meta in reversed(soup.find_all("meta")):
+        key = meta.get("property") or meta.get("name")
+        if not key:
+            continue
+        if key in seen:
+            meta.decompose()
+        else:
+            seen.add(key)
+    return soup
+
+
+def _rerender_if_spa_shell(url: str, soup: BeautifulSoup) -> BeautifulSoup:
+    """Swap a static SPA shell for the rendered page; otherwise return soup as is."""
+    if not _is_spa_shell(url, soup):
+        return soup
+    console.print("[yellow]og:url points at the site root: page is rendered client-side, re-fetching with a browser.[/yellow]")
+    return _render_page_soup(url) or soup
+
+
 def _fetch_og_image(url: str, soup: BeautifulSoup | None = None) -> bytes | None:
     """Try to fetch the og:image from a URL."""
     if soup is None:
@@ -779,6 +834,7 @@ def _fetch_og_image(url: str, soup: BeautifulSoup | None = None) -> bytes | None
             soup = BeautifulSoup(resp.text, "html.parser")
         except Exception:
             return None
+        soup = _rerender_if_spa_shell(url, soup)
 
     og_img = soup.find("meta", property="og:image")
     if not og_img or not og_img.get("content"):
@@ -1459,7 +1515,7 @@ def _fetch_page_text(url: str) -> str:
     try:
         resp = httpx.get(url, follow_redirects=True, timeout=10.0, headers=HTTP_HEADERS)
         resp.raise_for_status()
-        soup = BeautifulSoup(resp.text, "html.parser")
+        soup = _rerender_if_spa_shell(url, BeautifulSoup(resp.text, "html.parser"))
         return soup.get_text(separator=" ", strip=True)
     except Exception:
         return ""
@@ -1725,6 +1781,11 @@ def fetch_metadata(url: str) -> dict:
         else:
             console.print("No archived snapshot available. You can enter metadata manually.\n")
             return {"title": "", "description": "", "tags": [], "_soup": None, "_source": "FAIL (Cloudflare challenge)"}
+
+    rendered = _rerender_if_spa_shell(url, soup)
+    if rendered is not soup:
+        soup = rendered
+        source = "rendered SPA"
 
     # Title
     title = ""

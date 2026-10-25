@@ -321,6 +321,49 @@ class TestFetchMetadata:
         meta = main.fetch_metadata("https://example.com")
         assert meta["title"] == "Fallback Title"
 
+    @patch("campfire_cli.main.suggest_tags_with_llm", return_value=[])
+    @patch("campfire_cli.main.get_existing_tags", return_value=[])
+    @patch("campfire_cli.main.httpx.get")
+    def test_spa_shell_is_rerendered(self, mock_get, mock_existing, mock_suggest):
+        shell = (
+            '<html><head><title>amit</title>'
+            '<meta property="og:title" content="amit" />'
+            '<meta property="og:url" content="https://example.com/" />'
+            '</head><body><div id="root"></div></body></html>'
+        )
+        rendered = (
+            '<html><head><title>Real Post | amit</title>'
+            '<meta property="og:title" content="amit" />'
+            '<meta property="og:description" content="tagline" />'
+            '<meta data-rh="true" property="og:title" content="Real Post" />'
+            '<meta data-rh="true" property="og:description" content="Post summary." />'
+            '</head><body><h1>Real Post</h1></body></html>'
+        )
+        mock_resp = MagicMock()
+        mock_resp.text = shell
+        mock_resp.raise_for_status = MagicMock()
+        mock_get.return_value = mock_resp
+
+        with patch("campfire_cli.main._render_page_soup", wraps=main._render_page_soup) as mock_render, \
+             patch("playwright.sync_api.sync_playwright") as mock_pw:
+            page = mock_pw.return_value.__enter__.return_value.chromium.launch.return_value.new_page.return_value
+            page.content.return_value = rendered
+            meta = main.fetch_metadata("https://example.com/blog/real-post")
+
+        mock_render.assert_called_once()
+        assert meta["title"] == "Real Post"
+        assert meta["description"] == "Post summary."
+        assert "rendered" in meta["_source"]
+
+    def test_is_spa_shell(self):
+        from bs4 import BeautifulSoup
+        root = BeautifulSoup('<meta property="og:url" content="https://example.com/" />', "html.parser")
+        deep = BeautifulSoup('<meta property="og:url" content="https://example.com/blog/x" />', "html.parser")
+        assert main._is_spa_shell("https://example.com/blog/x", root)
+        assert not main._is_spa_shell("https://example.com/", root)
+        assert not main._is_spa_shell("https://example.com/blog/x", deep)
+        assert not main._is_spa_shell("https://example.com/blog/x", BeautifulSoup("<p/>", "html.parser"))
+
     @patch("campfire_cli.main.httpx.get", side_effect=httpx.HTTPStatusError("404", request=MagicMock(), response=MagicMock()))
     def test_http_error_returns_empty(self, mock_get):
         meta = main.fetch_metadata("https://example.com/404")
