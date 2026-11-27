@@ -738,3 +738,13 @@ class TestQueueReview:
         assert result.exit_code == 0
         assert not sample_link_md.exists()
         mock_hugo.assert_called_once()
+
+
+def test_expand_youtube_links_restores_truncated_urls_after_emoji():
+    content = "🎹 see https://github.com/a/pon...\nok https://x.io"
+    start = len("🎹 see ".encode("utf-16-le")) // 2  # YouTube offsets are UTF-16 units
+    redirect = "https://www.youtube.com/redirect?event=video_description&q=https%3A%2F%2Fgithub.com%2Fa%2Fponytail"
+    runs = [{"startIndex": start, "length": len("https://github.com/a/pon..."),
+             "onTap": {"innertubeCommand": {"commandMetadata": {"webCommandMetadata": {"url": redirect}}}}}]
+    assert main._expand_youtube_links({"content": content, "commandRuns": runs}) == \
+        "🎹 see https://github.com/a/ponytail\nok https://x.io"

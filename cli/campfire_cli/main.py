@@ -670,6 +670,22 @@ def _is_youtube_url(url: str) -> bool:
     return urlparse(url).hostname in _YOUTUBE_HOSTS
 
 
+def _expand_youtube_links(attributed: dict) -> str:
+    """Return description text with YouTube's truncated link labels ("https://x.com/ab...") replaced by the real URL."""
+    # Run offsets count UTF-16 code units, so slice the UTF-16 encoding (emoji would shift str indices).
+    buf = attributed.get("content", "").encode("utf-16-le")
+    runs = sorted(attributed.get("commandRuns", []), key=lambda r: r.get("startIndex", 0), reverse=True)
+    for run in runs:
+        start, length = 2 * run.get("startIndex", 0), 2 * run.get("length", 0)
+        label = buf[start:start + length].decode("utf-16-le", errors="ignore")
+        target = (run.get("onTap", {}).get("innertubeCommand", {}).get("commandMetadata", {})
+                  .get("webCommandMetadata", {}).get("url", ""))
+        real = parse_qs(urlparse(target).query).get("q", [""])[0]
+        if label.endswith("...") and real:
+            buf = buf[:start] + real.encode("utf-16-le") + buf[start + length:]
+    return buf.decode("utf-16-le")
+
+
 def _fetch_youtube_metadata(url: str) -> dict | None:
     """Fetch video-specific metadata from YouTube using oEmbed + page scrape."""
     # Get title and author via oEmbed (no API key needed)
@@ -695,9 +711,10 @@ def _fetch_youtube_metadata(url: str) -> dict | None:
         soup = BeautifulSoup(resp.text, "html.parser")
 
         # YouTube embeds the real video description in JS data as attributedDescription
-        match = re.search(r'"attributedDescription":\{"content":"(.*?)(?<!\\)"\,', resp.text)
-        if match:
-            raw_desc = json.loads('"' + match.group(1) + '"')
+        key = '"attributedDescription":'
+        pos = resp.text.find(key)
+        if pos != -1:
+            raw_desc = _expand_youtube_links(json.JSONDecoder().raw_decode(resp.text, pos + len(key))[0])
             # Filter out sponsor lines
             lines = [l for l in raw_desc.split("\n") if not re.search(r"sponsor", l, re.IGNORECASE)]
             # Convert timestamps (e.g. "01:46 - Topic") to clickable YouTube links
